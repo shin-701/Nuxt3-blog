@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "newt-client-js": "^3.3.3",
     "nuxt": "^3.12.4",
     "vue": "latest",

@@ -21,6 +21,8 @@
     カバー画像： coverImage
     著者： author
     タグ： tags
+    firstPublishedAt
+    git commit -m "【ブログデザイン作成】vutifyインストール[in progress]"
      =====================================-->
 <script lang="ts" setup>
 import type { Article } from '~/types/article'
@@ -35,7 +37,11 @@ const { data } = await useAsyncData('articles', async () => {
     // }
   })
 })
-const articles = data.value?.items
+const articles = data.value?.items;
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString()
+};
 
 useHead({
   title: 'Newt・Nuxtブログ',
@@ -46,174 +52,160 @@ useHead({
 </script>
 
 <template>
-  <div v-for="article in articles" :key="article._id">
-    <NuxtLink :to="`/articles/${article.slug}`" class="Article">
-      <div class="Article_Eyecatch">
-        <img alt="" loading="lazy" width="1000" height="667" decoding="async" data-nimg="1" v-bind:src="article.coverImage.src" style="color: transparent;">
-      </div>
-      <div class="Article_Data">
-        <h3 class="Article_Title">{{ article.title }}</h3>
-        <ul class="Article_Tags">
-          <li v-for="tag in article.tags" :key="tag._id">
-              #{{ tag.name }}
-          </li>
-        </ul>
-        <div class="Article_Author">
-          <div class="Article_AuthorEmpty">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="#CCCCCC">
-              <path d="M0 0h24v24H0V0z" fill="none"></path>
-              <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
-            </svg>
+  <v-layout class="rounded rounded-md">
+    <v-main class="align-center justify-center" style="min-height: 300px;">
+      <v-sheet class="bg-grey-lighten-3">
+        <!-- ===ヘッダー======================================== -->
+        <v-container>
+          <v-row justify="center">
+            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
+            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
+            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
+            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
+          </v-row>
+        </v-container>
+        <!-- ===HP名称・メイン画像================================ -->
+        <v-parallax v-bind:src="articles[0].coverImage.src" max-height="600" cover>
+          <div class="d-flex flex-column fill-height justify-center align-center text-white">
+            <h2 class="text-h2 font-weight-thin mb-4">となりの仲山</h2>
+            <h4 class="subheading">Build your application today!</h4>
           </div>
-          <div class="Article_AuthorData">
-            <span>Donna Thomason</span>
-            <time datetime="12/9/2021">12/9/2021</time>
-          </div>
-        </div>
-      </div>
-    </NuxtLink>
-  </div>
+        </v-parallax>
+
+        <!-- ===メインコンポーネント================================ -->
+        <v-container style="max-width: 1280px;" class="mx-auto">
+          <v-row>
+            <v-col cols="12" sm="6" md="9" lg="9">
+              <!-- ===最新の投稿================================ -->
+              <v-container class="bg-white rounded-lg">
+                <h2 align="center" justify="center" class="ma-10">最新の投稿</h2>
+                <v-row align="stretch" justify="center">
+                  <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4">
+                    <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
+                      <v-card variant="text" color="grey-darken-4">
+                        <v-img class="h-auto"v-bind:src="article.coverImage.src" cover></v-img>
+                        <v-card-item>
+                          <v-card-title class="font-weight-black text-subtitle-2" 
+                            style="white-space: normal; word-wrap: break-word; word-break: break-word;" 
+                            v-text="article.title">
+                          </v-card-title>
+                          <v-spacer />
+                          <v-card-subtitle  class="mt-2 text-caption">
+                            <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
+                          </v-card-subtitle>
+                          <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="small">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-item>
+                      </v-card>
+                    </NuxtLink>
+                  </v-col>
+                </v-row>
+              </v-container>
+
+              <!-- ===おすすめの投稿======================================== -->
+              <v-container class="bg-white rounded-lg mt-5">
+                <h2 align="center" justify="center" class="ma-10">おすすめの投稿</h2>
+                <v-row align="stretch" justify="center">
+                  <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4">
+                    <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
+                      <v-card variant="text" color="grey-darken-4">
+                        <v-img class="h-auto"v-bind:src="article.coverImage.src" cover></v-img>
+                        <v-card-item>
+                          <v-card-title class="font-weight-black text-subtitle-2" 
+                            style="white-space: normal; word-wrap: break-word; word-break: break-word;" 
+                            v-text="article.title">
+                          </v-card-title>
+                          <v-card-subtitle  class="mt-2 text-caption">
+                            <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
+                          </v-card-subtitle>
+                          <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="small">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-item>
+                      </v-card>
+                    </NuxtLink>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <!-- ===プロフィールカード================================ -->
+            <v-col>
+              <v-card>
+                <!-- 背景画像 -->
+                <v-img v-bind:src="articles[2].coverImage.src" class="d-block">
+                </v-img>
+
+                <!-- アイコンが背景画像にかぶる -->
+                <div align="center" justify="center">
+                  <v-avatar size="100" style="margin-top: -50px; border: 5px solid white;">
+                    <img v-bind:src="articles[2].coverImage.src" alt="Profile Icon" />
+                  </v-avatar>
+                </div>
+
+                <!-- 名前と説明文 -->
+                <v-card-title class="text-center font-weight-bold">John Doe</v-card-title>
+                <v-card-text class="text-center">A passionate developer with a love for coding and design.</v-card-text>
+
+                <!-- ソーシャルリンク -->
+                <v-card-actions class="justify-center">
+                  <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-twitter" href="https://x.com" target="_blank"></v-btn>
+                  <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-github" href="ttps://github.com" target="_blank"></v-btn>
+                </v-card-actions>
+              </v-card>
+
+              <!-- ===カテゴリ一覧================================ -->
+              <v-container class="bg-white rounded-lg mt-5 pa-0">
+                <v-list density="compact">
+                  <v-list-subheader class="font-weight-black text-subtitle-1">カテゴリ</v-list-subheader>
+                  <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-sm">
+                    <v-list-item-title class="font-weight-black text-body-2">ガジェット</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-sm">
+                    <v-list-item-title class="font-weight-black text-body-2">トラベル</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-sm">
+                    <v-list-item-title class="font-weight-black text-body-2">インテリア</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+
+        <!-- ===フッター================================ -->
+        <v-sheet class="bg-grey-lighten-3 pt-16 pb-16">
+            <v-card
+              class="mx-auto bg-white rounded-lg"
+            >
+              <v-img
+                class="align-end text-white"
+                height="200"
+                src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+                cover
+              >
+                <v-card-title>Top 10 Australian beaches</v-card-title>
+              </v-img>
+
+              <v-card-subtitle class="pt-4">
+                Number 10
+              </v-card-subtitle>
+
+              <v-card-text>
+                <div>Whitehaven Beach</div>
+
+                <div>Whitsunday Island, Whitsunday Islands</div>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-btn color="orange" text="Share"></v-btn>
+
+                <v-btn color="orange" text="Explore"></v-btn>
+              </v-card-actions>
+            </v-card>
+        </v-sheet>
+      </v-sheet>
+    </v-main>
+  </v-layout>
 </template>
 
-<style scoped>
-.Article {
-  display: block;
-  align-items: center;
-  color: #333;
-  text-decoration: none;
-  overflow: hidden;
-  padding: 0;
-  margin: 0 0 40px 0;
-}
-.Article:last-child {
-  margin: 0 0 28px 0;
-}
-.Article_Eyecatch {
-  width: 100%;
-  height: 0;
-  padding: 52.5% 0 0 0;
-  border-radius: 4px;
-  overflow: hidden;
-  flex-shrink: 0;
-  margin: 0 0 12px 0;
-  position: relative;
-}
-.Article_Eyecatch > img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.Article_EyecatchEmpty {
-  background: #f8f8f8;
-  width: 280px;
-  height: 147px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.Article_Data {
-  flex: 1;
-}
-.Article_Title {
-  font-size: 1.8rem;
-  line-height: 1.5;
-  margin: 0 0 10px;
-  padding: 0;
-  display: -webkit-box;
-  overflow: hidden;
-  -line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.Article_Tags {
-  margin: 0 0 8px;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-}
-.Article_Tags li {
-  margin: 0 4px 4px 0;
-  padding: 0 4px;
-  list-style: none;
-  font-size: 1.2rem;
-  color: #666;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-}
-.Article_Author {
-  display: flex;
-  align-items: center;
-}
-.Article_Author > img {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-  margin: 0 12px 0 0;
-  flex-shrink: 0;
-}
-.Article_Author img {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-  font-family: 'object-fit: cover'; /* IE11 */
-}
-.Article_AuthorEmpty {
-  width: 32px;
-  height: 32px;
-  background: #f8f8f8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  margin: 0 12px 0 0;
-  flex-shrink: 0;
-}
-.Article_AuthorData {
-  flex: 1;
-}
-.Article_AuthorData span {
-  font-size: 1.2rem;
-  font-weight: 700;
-  display: block;
-  line-height: 1.5;
-}
-.Article_AuthorData time {
-  font-size: 1.2rem;
-  display: block;
-  color: #666;
-  line-height: 1.5;
-}
-@media (min-width: 600px) {
-  .Article {
-    display: flex;
-    border-bottom: 1px solid #e5e5e5;
-    padding: 0 0 36px;
-    margin: 0 0 36px;
-  }
-  .Article:hover .Article_Title {
-    text-decoration: underline;
-  }
-  .Article:last-child {
-    border-bottom: none;
-    padding: 0 0 20px 0;
-  }
-  .Article_Eyecatch {
-    width: 280px;
-    height: 147px;
-    margin: 0 28px 0 0;
-    padding: 0;
-  }
-  .Article_Eyecatch img {
-    width: 280px;
-    height: 147px;
-  }
-  .Article_Title {
-    margin: 0 0 12px;
-  }
-  .Article_Tags {
-    margin: 0 0 16px;
-  }
-}
-</style>
