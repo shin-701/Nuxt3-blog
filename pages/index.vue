@@ -23,21 +23,49 @@
     タグ： tags
     firstPublishedAt
     git commit -m "【ブログデザイン作成】vutifyインストール[in progress]"
-     =====================================-->
+========================================== -->
+
 <script lang="ts" setup>
 import type { Article } from '~/types/article'
+import type { Tag } from '~/types/tag'
 
+// ===========================
+//   ◆Newtからデータ取得処理
+// ===========================
+// 投稿(article)取得
 const { data } = await useAsyncData('articles', async () => {
   const { $newtClient } = useNuxtApp()
   return await $newtClient.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
-    // query: {
-    //   select: ['_id', 'title', 'slug', 'body', 'coverImage']
-    // }
+    query: {
+      // 「-」をつけることで最新の投稿から降順で取得する
+      order: ['-_sys.createdAt']
+    }
   })
 })
+
+// タグ(tags)取得
+const { data: tagData } = await useAsyncData('tags', async () => {
+  const { $newtClient } = useNuxtApp()
+  return await $newtClient.getContents<Tag>({
+    appUid: 'blog',
+    modelUid: 'tag',
+    query: {
+      // 「-」をつけることで最新の投稿から降順で取得する
+      order: ['name']
+    }
+  })
+})
+
+// 全投稿データ
 const articles = data.value?.items;
+// おすすめの投稿データ
+const recommendArticles = articles?.filter(article => article.recommendation === true);
+// 全タグデータ
+const tags = tagData.value?.items;
+
+
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString()
@@ -56,10 +84,11 @@ useHead({
     <v-main class="align-center justify-center" style="min-height: 300px;">
       <v-sheet class="bg-grey-lighten-3">
         <!-- ===ヘッダー======================================== -->
-        <v-container>
+        <v-container style="max-width: 1280px;" class="d-flex mx-auto">
+          <v-text class="text-h6 font-weight-black">Tonari no Nakayama</v-text>
           <v-row justify="center">
-            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
-            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
+            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >ABOUT</v-sheet></v-col>
+            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >CONTACT</v-sheet></v-col>
             <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
             <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
           </v-row>
@@ -67,26 +96,53 @@ useHead({
         <!-- ===HP名称・メイン画像================================ -->
         <v-parallax v-bind:src="articles[0].coverImage.src" max-height="600" cover>
           <div class="d-flex flex-column fill-height justify-center align-center text-white">
-            <h2 class="text-h2 font-weight-thin mb-4">となりの仲山</h2>
-            <h4 class="subheading">Build your application today!</h4>
+            <h2 class="text-h1 font-weight-black mb-4">Tonari no Nakayama</h2>
+            <h4 class="text-h5">Engineering blog powered by shin-701</h4>
           </div>
         </v-parallax>
 
         <!-- ===メインコンポーネント================================ -->
-        <v-container style="max-width: 1280px;" class="mx-auto">
+        <v-container style="max-width: 1280px; margin-top: -100px; position: relative;" class="mx-auto">
           <v-row>
-            <v-col cols="12" sm="6" md="9" lg="9">
-              <!-- ===最新の投稿================================ -->
-              <v-container class="bg-white rounded-lg">
-                <h2 align="center" justify="center" class="ma-10">最新の投稿</h2>
+            <v-col cols="12" sm="12" md="12" lg="9">
+              <!-- ===おすすめの投稿================================ -->
+              <v-container class="bg-white rounded-lg pa-12">
                 <v-row align="stretch" justify="center">
-                  <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4">
+                  <h2 align="center" justify="center">おすすめの投稿</h2>
+                </v-row>
+                <v-row align="stretch" justify="start">
+                  <v-col v-for="article in recommendArticles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0">
                     <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
-                      <v-card variant="text" color="grey-darken-4">
-                        <v-img class="h-auto"v-bind:src="article.coverImage.src" cover></v-img>
-                        <v-card-item>
+                      <v-card variant="text" color="grey-darken-4" class="mx-3 mt-6">
+                        <v-img class="h-auto rounded-lg" v-bind:src="article.coverImage.src" cover></v-img>
+                        <v-card-item class="pa-0 mt-3">
                           <v-card-title class="font-weight-black text-subtitle-2" 
-                            style="white-space: normal; word-wrap: break-word; word-break: break-word;" 
+                            style="white-space: normal; line-height: 1.4;" 
+                            v-text="article.title">
+                          </v-card-title>
+                          <v-card-subtitle  class="mt-2 text-caption">
+                            <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
+                          </v-card-subtitle>
+                          <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="small">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-item>
+                      </v-card>
+                    </NuxtLink>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <!-- ===新着記事======================================== -->
+              <v-container class="bg-white rounded-lg pa-12 mt-12">
+                <h2 align="center" justify="center">新着記事</h2>
+                <div v-for="article in articles" :key="article._id">
+                  <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
+                    <v-card variant="text" color="grey-darken-4" class="mt-6">
+                      <div class="d-flex d-flex-column">
+                        <v-img class="h-auto rounded-lg" v-bind:src="article.coverImage.src" cover></v-img>
+                        <v-card-item style="width: 65%;">
+                          <v-card-title class="font-weight-black text-subtitle-1" 
+                            style="white-space: normal; word-wrap: break-word; word-break: break-word; line-height: 1.4;" 
                             v-text="article.title">
                           </v-card-title>
                           <v-spacer />
@@ -94,118 +150,82 @@ useHead({
                             <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
                           </v-card-subtitle>
                           <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="small">
-                            #{{ tag.name }}
+                            #{{ tag.slug }}
                           </v-chip>
                         </v-card-item>
-                      </v-card>
-                    </NuxtLink>
-                  </v-col>
-                </v-row>
-              </v-container>
-
-              <!-- ===おすすめの投稿======================================== -->
-              <v-container class="bg-white rounded-lg mt-5">
-                <h2 align="center" justify="center" class="ma-10">おすすめの投稿</h2>
-                <v-row align="stretch" justify="center">
-                  <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4">
-                    <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
-                      <v-card variant="text" color="grey-darken-4">
-                        <v-img class="h-auto"v-bind:src="article.coverImage.src" cover></v-img>
-                        <v-card-item>
-                          <v-card-title class="font-weight-black text-subtitle-2" 
-                            style="white-space: normal; word-wrap: break-word; word-break: break-word;" 
-                            v-text="article.title">
-                          </v-card-title>
-                          <v-card-subtitle  class="mt-2 text-caption">
-                            <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
-                          </v-card-subtitle>
-                          <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="small">
-                            #{{ tag.name }}
-                          </v-chip>
-                        </v-card-item>
-                      </v-card>
-                    </NuxtLink>
-                  </v-col>
-                </v-row>
+                      </div>
+                    </v-card>
+                  </NuxtLink>
+                </div>
               </v-container>
             </v-col>
             <!-- ===プロフィールカード================================ -->
             <v-col>
-              <v-card>
-                <!-- 背景画像 -->
-                <v-img v-bind:src="articles[2].coverImage.src" class="d-block">
-                </v-img>
+              <v-container class="pa-0 mt-0">
+                <v-card class="rounded-lg">
+                  <!-- 背景画像 -->
+                  <v-img v-bind:src="articles[2].coverImage.src" class="d-block">
+                  </v-img>
 
-                <!-- アイコンが背景画像にかぶる -->
-                <div align="center" justify="center">
-                  <v-avatar size="100" style="margin-top: -50px; border: 5px solid white;">
-                    <img v-bind:src="articles[2].coverImage.src" alt="Profile Icon" />
-                  </v-avatar>
-                </div>
+                  <!-- アイコンが背景画像にかぶる -->
+                  <div align="center" justify="center">
+                    <v-avatar size="100" style="margin-top: -50px; border: 5px solid white;">
+                      <img v-bind:src="articles[2].coverImage.src" alt="Profile Icon" />
+                    </v-avatar>
+                  </div>
 
-                <!-- 名前と説明文 -->
-                <v-card-title class="text-center font-weight-bold">John Doe</v-card-title>
-                <v-card-text class="text-center">A passionate developer with a love for coding and design.</v-card-text>
+                  <!-- 名前と説明文 -->
+                  <v-card-title class="text-center font-weight-bold">John Doe</v-card-title>
+                  <v-card-text class="text-center">A passionate developer with a love for coding and design.</v-card-text>
 
-                <!-- ソーシャルリンク -->
-                <v-card-actions class="justify-center">
-                  <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-twitter" href="https://x.com" target="_blank"></v-btn>
-                  <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-github" href="ttps://github.com" target="_blank"></v-btn>
-                </v-card-actions>
-              </v-card>
+                  <!-- ソーシャルリンク -->
+                  <v-card-actions class="justify-center">
+                    <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-twitter" href="https://x.com" target="_blank"></v-btn>
+                    <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-github" href="ttps://github.com" target="_blank"></v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-container>
 
-              <!-- ===カテゴリ一覧================================ -->
-              <v-container class="bg-white rounded-lg mt-5 pa-0">
-                <v-list density="compact">
-                  <v-list-subheader class="font-weight-black text-subtitle-1">カテゴリ</v-list-subheader>
-                  <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-sm">
-                    <v-list-item-title class="font-weight-black text-body-2">ガジェット</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-sm">
-                    <v-list-item-title class="font-weight-black text-body-2">トラベル</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-sm">
-                    <v-list-item-title class="font-weight-black text-body-2">インテリア</v-list-item-title>
-                  </v-list-item>
+              <!-- ===タグ一覧================================ -->
+              <v-container class="mt-5 pa-0">
+                <v-list density="compact" class="rounded-lg">
+                  <v-list-subheader class="font-weight-black text-subtitle-1">タグ</v-list-subheader>
+                  <div v-for="tag in tags" :key="tag._id">
+                    <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-thin">
+                      <v-list-item-title class="font-weight-black text-body-2" v-text="tag.name"></v-list-item-title>
+                    </v-list-item>
+                  </div>
                 </v-list>
               </v-container>
             </v-col>
           </v-row>
+          <!-- ===フッター================================ -->
+          <v-container class="ma-0 mt-12 pa-0">
+            <v-row align="center" justify="space-between">
+              <!-- 左側: 会社情報 -->
+              <v-col cols="12" md="6">
+                <p class="white--text mb-0">&copy; 2024 Tonari no Nakayama. All rights reserved.</p>
+              </v-col>
+
+              <!-- 右側: ソーシャルメディアのアイコン -->
+              <v-col cols="12" md="6" class="text-center text-md-right">
+                <v-btn icon color="white">
+                  <v-icon>mdi-facebook</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                  <v-icon>mdi-twitter</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                  <v-icon>mdi-instagram</v-icon>
+                </v-btn>
+                <v-btn icon color="white">
+                  <v-icon>mdi-linkedin</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-container>
-
-        <!-- ===フッター================================ -->
-        <v-sheet class="bg-grey-lighten-3 pt-16 pb-16">
-            <v-card
-              class="mx-auto bg-white rounded-lg"
-            >
-              <v-img
-                class="align-end text-white"
-                height="200"
-                src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                cover
-              >
-                <v-card-title>Top 10 Australian beaches</v-card-title>
-              </v-img>
-
-              <v-card-subtitle class="pt-4">
-                Number 10
-              </v-card-subtitle>
-
-              <v-card-text>
-                <div>Whitehaven Beach</div>
-
-                <div>Whitsunday Island, Whitsunday Islands</div>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-btn color="orange" text="Share"></v-btn>
-
-                <v-btn color="orange" text="Explore"></v-btn>
-              </v-card-actions>
-            </v-card>
-        </v-sheet>
       </v-sheet>
     </v-main>
   </v-layout>
 </template>
-

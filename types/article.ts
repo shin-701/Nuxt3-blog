@@ -14,6 +14,7 @@ export interface Article extends Content {
   coverImage: Media
   author: Author
   tags?: Tag[]
+  recommendation: boolean
 }
 
 export interface Archive {
