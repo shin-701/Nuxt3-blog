@@ -30,7 +30,7 @@ import type { Article } from '~/types/article'
 import type { Tag } from '~/types/tag'
 
 // ===========================
-//   ◆Newtからデータ取得処理
+//  ◆Newtからデータ取得処理
 // ===========================
 // 投稿(article)取得
 const { data } = await useAsyncData('articles', async () => {
@@ -66,7 +66,9 @@ const recommendArticles = articles?.filter(article => article.recommendation ===
 const tags = tagData.value?.items;
 
 
-
+// ===========================
+//  ◆呼び出し関数
+// ===========================
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString()
 };
@@ -84,12 +86,11 @@ useHead({
     <v-main class="align-center justify-center" style="min-height: 300px;">
       <v-sheet class="bg-grey-lighten-3">
         <!-- ===ヘッダー======================================== -->
-        <v-container style="max-width: 1280px;" class="d-flex mx-auto">
-          <v-text class="text-h6 font-weight-black">Tonari no Nakayama</v-text>
+        <v-container  class="d-flex mx-auto">
+          <v-text class="text-auto font-weight-black">Tonari no Nakayama</v-text>
           <v-row justify="center">
             <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >ABOUT</v-sheet></v-col>
             <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >CONTACT</v-sheet></v-col>
-            <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
             <v-col cols="auto" class="pa-1"><v-sheet class="pa-2 mt-2 mb-3" align="center" >.v-col-auto</v-sheet></v-col>
           </v-row>
         </v-container>
@@ -102,16 +103,16 @@ useHead({
         </v-parallax>
 
         <!-- ===メインコンポーネント================================ -->
-        <v-container style="max-width: 1280px; margin-top: -100px; position: relative;" class="mx-auto">
+        <v-container style="margin-top: -100px; position: relative;">
           <v-row>
-            <v-col cols="12" sm="12" md="12" lg="9">
-              <!-- ===おすすめの投稿================================ -->
+            <v-col cols="12" lg="9">
+              <!-- ===おすすめの投稿=======================¬========= -->
               <v-container class="bg-white rounded-lg pa-12">
                 <v-row align="stretch" justify="center">
                   <h2 align="center" justify="center">おすすめの投稿</h2>
                 </v-row>
                 <v-row align="stretch" justify="start">
-                  <v-col v-for="article in recommendArticles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0">
+                  <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0">
                     <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
                       <v-card variant="text" color="grey-darken-4" class="mx-3 mt-6">
                         <v-img class="h-auto rounded-lg" v-bind:src="article.coverImage.src" cover></v-img>
@@ -229,3 +230,16 @@ useHead({
     </v-main>
   </v-layout>
 </template>
+
+<style scoped>
+.v-container {
+      max-width: 1380px;
+  }
+
+@media (max-width: 1280px) {
+  .v-container {
+      max-width: 100%;
+  }
+}
+
+</style>
