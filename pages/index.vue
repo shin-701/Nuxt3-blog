@@ -105,19 +105,27 @@ useHead({
           </v-row>
         </v-container>
         <!-- ===メインコンポーネント================================ -->
-        <v-container>
-          <v-row>
-            <v-col cols="4" v-for="article in articles" :key="article._id">
-              <v-card class="d-flex flex-column">
-                <v-img v-bind:src="article.coverImage.src" alt="Card Header Image" height="200px" class="fixed-image" cover></v-img>
-                <v-card-title>{{ article.title }}</v-card-title>
-                <v-card-text>{{ article.title }}</v-card-text>
-                <v-card-actions>
-                  <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="default">
-                    #{{ tag.name }}
-                  </v-chip>
-                </v-card-actions>
-              </v-card>
+        <v-container class="my-10 pa-0">
+          <div class="text-h3 ma-3 font-weight-black" justify="center">おすすめの投稿</div>
+          <v-row class="ma-0">
+            <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-5">
+              <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
+                <v-card class="mx-1 d-flex flex-column h-100 bg-grey-lighten-3 rounded-xl" hover>
+                  <v-img v-bind:src="article.coverImage.src" alt="Card Header Image" height="200px" class="rounded-xl" style="flex: none;" cover></v-img>
+                  <v-card-title class="font-weight-black text-subtitle-1" style="white-space: normal;">
+                    {{ article.title }}
+                  </v-card-title>
+                  <v-spacer></v-spacer>
+                  <v-card-subtitle  class="text-caption">
+                    <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
+                  </v-card-subtitle>
+                  <v-card-actions>
+                    <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="default">
+                      #{{ tag.name }}
+                    </v-chip>
+                  </v-card-actions>
+                </v-card>
+              </NuxtLink>
             </v-col>
           </v-row>
         </v-container>
@@ -125,24 +133,23 @@ useHead({
         <v-container class="bg-grey-lighten-4 my-10 pa-0">
           <div class="text-h3 ma-3 font-weight-black" justify="center">おすすめの投稿</div>
           <v-row class="ma-0">
-            <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 ma-0">
+            <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-5">
               <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
-                <v-card variant="text" color="black" class="mx-1 my-6 bg-grey-lighten-1 rounded-xl h-100" hover>
-                  <v-img class="rounded-xl" v-bind:src="article.coverImage.src" style="aspect-ratio: 394/200;" cover></v-img>
-                  <div class="pa-2">
-                    <v-card-title class="font-weight-black text-subtitle-1" 
-                      style="white-space: normal;" 
-                      v-text="article.title">
-                    </v-card-title>
-                    <v-card-subtitle  class="mt-2 text-caption">
-                      <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
-                    </v-card-subtitle>
-                    <div class="px-3 py-1">
-                      <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="default">
-                        #{{ tag.name }}
-                      </v-chip>
-                    </div>
-                  </div>
+                <!-- <v-card variant="text" color="black" class="mx-1 my-6 bg-grey-lighten-3 rounded-xl"> -->
+                <v-card class="d-flex flex-column h-100 bg-grey-lighten-3 rounded-xl mx-1 my-6" hover>
+                  <v-img v-bind:src="article.coverImage.src" alt="Card Header Image" height="200px" class="rounded-xl" style="flex: none;" cover></v-img>
+                  <v-card-title class="font-weight-black text-subtitle-1" style="white-space: normal;">
+                    {{ article.title }}
+                  </v-card-title>
+                  <v-spacer></v-spacer>
+                  <v-card-subtitle  class="mt-2 text-caption">
+                    <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
+                  </v-card-subtitle>
+                  <v-card-actions>
+                    <v-chip v-for="tag in article.tags" :key="tag._id" density="compact" size="default">
+                      #{{ tag.name }}
+                    </v-chip>
+                  </v-card-actions>
                 </v-card>
               </NuxtLink>
             </v-col>
@@ -235,14 +242,12 @@ useHead({
 }
 
 .v-card {
-  height: 100%;
-  text-align: center;
+
+
 }
 
 /* Ensures all images have the same height and aspect ratio is maintained */
 .fixed-image {
-  object-fit: cover;
-  height: 200px;
   flex: none;
 }
 </style>
