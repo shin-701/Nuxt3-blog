@@ -28,6 +28,7 @@
 <script lang="ts" setup>
 import type { Article } from '~/types/article'
 import type { Tag } from '~/types/tag'
+import { useDisplay } from 'vuetify'
 
 // ===========================
 //  ◆Newtからデータ取得処理
@@ -69,6 +70,8 @@ const tags = tagData.value?.items;
 // ===========================
 //  ◆呼び出し関数
 // ===========================
+const { mdAndUp } = useDisplay()
+
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString()
 };
@@ -178,7 +181,7 @@ useHead({
           </v-row>
         </v-container>
         <!-- ===タグ一覧================================ -->
-        <v-container class="my-5 pa-0">
+        <v-container class="mt-5 pa-0">
           <v-list density="compact" class="rounded-lg">
             <v-list-subheader class="font-weight-black text-subtitle-1">タグ</v-list-subheader>
             <div v-for="tag in tags" :key="tag._id">
@@ -189,23 +192,51 @@ useHead({
           </v-list>
         </v-container>
         <!-- ===フッター================================ -->
-        <v-footer class="bg-grey-lighten-2">
-          <v-container class="my-3 d-flex flex-column align-center">
-            <div class="ma-3 d-flex flex-column align-center"">
-              <v-text class="font-weight-black text-h4">Tonari no Nakayama</v-text>
-              <v-text class="text-body-2 mt-3">Engineering blog powered by shin-701</v-text> 
-            </div>
-            <div class="ma-2">
-              <v-icon class="ma-2" icon="mdi-twitter" size="x-large" href="https://x.com" target="_blank"></v-icon>
-              <v-icon class="ma-2" icon="mdi-github" size="x-large" href="https://github.com" target="_blank"></v-icon>
-            </div>
-            <div class="align-center justify-center">
-              <v-btn class="mx-2" variant="text">HOME</v-btn>
-              <v-btn class="mx-2" variant="text">ABOUT ME</v-btn>
-              <v-btn class="mx-2" variant="text">ARTICLES</v-btn>
-              <v-icon class="mx-2 px-4" icon="mdi-magnify" size="x-large" href="https://github.com" target="_blank"></v-icon>
-            </div>
+        <v-footer class="bg-grey-lighten-2 d-flex flex-column">
+          <v-container>
+            
+            <v-row>
+              <v-col>
+                <v-card class="rounded-lg">
+                  <!-- 背景画像 -->
+                  <v-img v-bind:src="articles[2].coverImage.src" class="d-block" style="height: 180px;" cover>
+                  </v-img>
+
+                  <!-- アイコンが背景画像にかぶる -->
+                  <div align="center" justify="center">
+                    <v-avatar size="100" style="margin-top: -50px; border: 5px solid white;">
+                      <img v-bind:src="articles[2].coverImage.src" alt="Profile Icon" />
+                    </v-avatar>
+                  </div>
+
+                  <!-- 名前と説明文 -->
+                  <v-card-title class="text-center font-weight-bold">John Doe</v-card-title>
+                  <v-card-text class="text-center">A passionate developer with a love for coding and design.</v-card-text>
+
+                  <!-- ソーシャルリンク -->
+                  <v-card-actions class="justify-center">
+
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+              <v-col class="d-flex flex-columnjustify-center">
+                <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-3" hover>
+                  <v-text class="font-weight-black text-h5">Tonari</v-text>
+                  <v-text class="font-weight-black text-h5">no</v-text>
+                  <v-text class="font-weight-black text-h5">Nakayama</v-text>
+                  <v-text class="text-h6 mt-8">Engineering blog powered by shin-701</v-text>
+                  <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-twitter" href="https://x.com" target="_blank"></v-btn>
+                  <v-btn class="bg-grey-lighten-3 ma-2" color="purple" icon="mdi-github" href="ttps://github.com" target="_blank"></v-btn>
+                </v-container>
+              </v-col>
+            </v-row>
           </v-container>
+
+          <v-divider></v-divider>
+
+          <div>
+            {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+          </div>
         </v-footer>
       </v-container>
     </v-main>
