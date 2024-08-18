@@ -73,6 +73,9 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString()
 };
 
+// ===========================
+//  ◆メタ情報
+// ===========================
 useHead({
   title: 'Newt・Nuxtブログ',
   meta: [
@@ -88,22 +91,46 @@ useHead({
         <!-- ===HP名称・メイン画像================================ -->
         <v-container class="d-flex pa-0 header-v-container">
           <v-row class="ma-0">
-            <v-col class="pa-1 header-v-col" cols="12" sm="12" md="auto">
+            <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="auto">
               <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-16 h-100" hover>
-                <v-text class="font-weight-black text-h1">Tonari</v-text>
-                <v-text class="font-weight-black text-h1">no</v-text>
-                <v-text class="font-weight-black text-h1">Nakayama</v-text>
-                <v-text class="text-h5 mt-8">Engineering blog powered by shin-701</v-text> 
+                <span class="font-weight-black text-h1">Tonari</span>
+                <span class="font-weight-black text-h1">no</span>
+                <span class="font-weight-black text-h1">Nakayama</span>
+                <span class="text-h5 mt-8">Engineering blog powered by shin-701</span> 
               </v-container>
             </v-col>
-            <v-col class="pa-1 header-v-col">
+            <v-col class="pa-1 h-100-minw960">
                 <v-img v-bind:src="articles[0].coverImage.src" class="rounded-xl h-100" cover></v-img>
             </v-col>
           </v-row>
         </v-container>
+
+        <v-container class="my-1 pa-0 wide-v-container bg-grey-lighten-3 rounded-xl">
+          <v-row class="ma-0">
+            <v-col class="pa-0">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
+                <v-card-title class="font-weight-black">HOME</v-card-title>
+              </v-card>
+            </v-col>
+            <v-col class="pa-0">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
+                <v-card-title class="font-weight-black">ABOUT ME</v-card-title>
+              </v-card>
+            </v-col>
+            <v-col class="pa-0">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
+                <v-card-title class="font-weight-black">CONTACT</v-card-title>
+              </v-card>
+            </v-col>
+            
+          </v-row>
+        </v-container>
+
         <!-- ===新着記事======================================== -->
-        <v-container class="my-10 pa-0">
-          <div class="text-h3 ma-3 font-weight-black" justify="center">新着記事 PICK UP</div>
+        <v-container class="mt-15 px-0 wide-v-container">
+          <div class="text-h3 ma-3 font-weight-black d-flex align-center justify-center">N E W S</div>
+        </v-container>
+        <v-container class="pa-0">
           <v-row class="ma-0">
             <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-5">
               <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
@@ -127,49 +154,51 @@ useHead({
           </v-row>
         </v-container>
         <!-- ===おすすめの投稿=======================¬========= -->
-        <v-container class="my-10 pa-0 wide-v-container">
-          <div class="text-h3 ma-3 font-weight-black" justify="center">おすすめ記事</div>
+        <v-container class="mt-15 px-0 wide-v-container">
+          <div class="text-h3 ma-3 font-weight-black d-flex align-center justify-center">R E C O M M E N D</div>
+        </v-container>
+        <v-container class="px-0 wide-v-container">
           <v-row class="ma-0">
             <v-col class="pa-0" cols="12" sm="12" md="9" lg="9">
-              <v-row class="mx-0 my-1">
-                <v-col class="pa-0" cols="12" sm="12" md="9" lg="9">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
+              <v-row class="ma-0">
+                <v-col class="pa-1" cols="12" sm="12" md="9" lg="9">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
                   </v-card>
                 </v-col>
-                <v-col class="pa-0" cols="12" sm="12" md="3" lg="3">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
+                <v-col class="pa-1" cols="12" sm="12" md="3" lg="3">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
                   </v-card>
                 </v-col>
               </v-row>
-              <v-row class="mx-0 my-1">
-                <v-col class="pa-0" cols="12" sm="12" md="4" lg="4">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
+              <v-row class="ma-0">
+                <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  </v-card>
+                </v-col>
+                <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
                   </v-card>
                 </v-col>
-                <v-col class="pa-0" cols="12" sm="12" md="4" lg="4">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
-                  </v-card>
-                </v-col>
-                <v-col class="pa-0" cols="12" sm="12" md="4" lg="4">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
+                <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
                   </v-card>
                 </v-col>
               </v-row>
             </v-col>
             <v-col class="pa-0" cols="12" sm="12" md="3" lg="3">
-              <v-row class="mx-0 my-1 d-flex flex-column fill-height">
-                <v-col class="pa-0" style="max-width: 100%;" cols="12" sm="12" md="4" lg="4">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
+              <v-row class="mx-0 my-1 d-flex flex-column h-100-minw960">
+                <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="4" lg="4">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
                   </v-card>
                 </v-col>
-                <v-col class="pa-0" style="max-width: 100%;" cols="12" sm="12" md="4" lg="8">
-                  <v-card class="ma-1 d-flex flex-column h-100 rounded-xl" hover>
+                <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="8" lg="8">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
                   </v-card>
                 </v-col>
@@ -177,34 +206,52 @@ useHead({
             </v-col>
           </v-row>
         </v-container>
-        <!-- ===タグ一覧================================ -->
-        <v-container class="my-5 pa-0">
-          <v-list density="compact" class="rounded-lg">
-            <v-list-subheader class="font-weight-black text-subtitle-1">タグ</v-list-subheader>
-            <div v-for="tag in tags" :key="tag._id">
-              <v-list-item append-icon="mdi-arrow-right-bold" class="mr-4 ml-4 pa-0 border-b-thin">
-                <v-list-item-title class="font-weight-black text-body-2" v-text="tag.name"></v-list-item-title>
-              </v-list-item>
-            </div>
-          </v-list>
+
+        <!-- ===タグ・検索================================ -->
+        <v-container class="mt-15 pa-0">
+          <v-row class="mx-0 mt-6 mb-14 d-flex justify-center align-stretch">
+            <v-col cols="12" sm="12" md="6" lg="6">
+              <span class="mx-4 text-h5 font-weight-black">TAG</span>
+              <v-divider class="ma-3"></v-divider>
+              <div class="flex-grow-0">
+                <NuxtLink v-for="tag in tags" :key="tag._id" :to="`/search/${tag.slug}`" class="text-decoration-none">
+                  <v-chip class="ma-1 custom-card" color="black" density="compact" size="large">#{{ tag.name }}</v-chip>
+                </NuxtLink>
+              </div>
+            </v-col>
+            <v-col cols="12" sm="12" md="6" lg="6">
+              <span class="mx-4 text-h5 font-weight-black">SEARCH</span>
+              <v-divider class="ma-3"></v-divider>
+              <v-text-field hide-details clearable label="検索ワードを入力して記事を探します" prepend-icon="mdi-magnify" variant="solo"></v-text-field>
+            </v-col>
+          </v-row>
         </v-container>
+        
         <!-- ===フッター================================ -->
-        <v-footer class="bg-grey-lighten-2">
-          <v-container class="my-3 d-flex flex-column align-center">
-            <div class="ma-3 d-flex flex-column align-center"">
-              <v-text class="font-weight-black text-h4">Tonari no Nakayama</v-text>
-              <v-text class="text-body-2 mt-3">Engineering blog powered by shin-701</v-text> 
-            </div>
-            <div class="ma-2">
-              <v-icon class="ma-2" icon="mdi-twitter" size="x-large" href="https://x.com" target="_blank"></v-icon>
-              <v-icon class="ma-2" icon="mdi-github" size="x-large" href="https://github.com" target="_blank"></v-icon>
-            </div>
-            <div class="align-center justify-center">
-              <v-btn class="mx-2" variant="text">HOME</v-btn>
-              <v-btn class="mx-2" variant="text">ABOUT ME</v-btn>
-              <v-btn class="mx-2" variant="text">ARTICLES</v-btn>
-              <v-icon class="mx-2 px-4" icon="mdi-magnify" size="x-large" href="https://github.com" target="_blank"></v-icon>
-            </div>
+        <v-footer class="bg-grey-darken-3">
+          <v-container class="mt-10 pa-0">
+            <v-row class="mx-3">
+              <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">HOME</v-btn></v-col>
+              <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
+              <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">ABOUT ME</v-btn></v-col>
+              <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
+              <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">CONTACT</v-btn></v-col>
+            </v-row>
+            <v-row class="mt-10 mb-3">
+              <v-col class="d-flex flex-column align-center pa-0">
+                <span class="font-weight-black text-h4">Tonari no Nakayama</span>
+                <span class="text-body-2 mt-1">Engineering blog powered by shin-701</span>
+                <div class="mt-5">
+                  <v-icon class="custom-card mx-4 rounded-xl" icon="mdi-twitter" size="x-large" href="https://x.com" target="_blank"></v-icon>
+                  <v-icon class="custom-card mx-4 rounded-xl" icon="mdi-github" size="x-large" href="https://github.com" target="_blank"></v-icon>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-footer>
+        <v-footer class="pa-0 bg-grey-lighten-2">
+          <v-container class="pa-0">
+            <div class="d-flex flex-column align-center text-body-2">© 2024 shin-701</div>
           </v-container>
         </v-footer>
       </v-container>
@@ -223,6 +270,13 @@ useHead({
 .wide-v-container {
   max-width: 1760px;
 }
+.custom-card {
+  transition: background-color 0.5s ease;
+}
+.custom-card:hover {
+  background-color: #BCAAA4; /* hover時の背景色 */
+}
+
 @media (max-width: 959px) {
   .v-container .wide-v-container{
     max-width: 100%;
@@ -233,8 +287,11 @@ useHead({
   }
 }
 @media (min-width: 960px) {
-  .header-v-col {
+  .h-100-minw960 {
     height: 100% !important;
+  }
+  .maxw-100-minw960 {
+    max-width: 100%;
   }
 }
 </style>
