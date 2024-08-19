@@ -14,11 +14,13 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "newt-client-js": "^3.3.3",
     "nuxt": "^3.12.4",
+    "raindrops": "d-harel/raindrops",
     "vue": "latest",
     "vuetify": "^3.6.14",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.30",
     "sass-embedded": "^1.77.8",
     "typescript": "^5.5.4",
     "vue-tsc": "^2.0.29"

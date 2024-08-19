@@ -28,6 +28,17 @@
 <script lang="ts" setup>
 import type { Article } from '~/types/article'
 import type { Tag } from '~/types/tag'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+// ===========================
+//  ◆Head情報
+// ===========================
+useHead({
+  title: 'Newt・Nuxtブログ',
+  meta: [
+    { name: 'description', content: 'NewtとNuxtを利用したブログです' }
+  ],
+})
 
 // ===========================
 //  ◆Newtからデータ取得処理
@@ -73,15 +84,36 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString()
 };
 
-// ===========================
-//  ◆メタ情報
-// ===========================
-useHead({
-  title: 'Newt・Nuxtブログ',
-  meta: [
-    { name: 'description', content: 'NewtとNuxtを利用したブログです' }
-  ]
-})
+// maxWidthを動的に設定するためのref
+const isFixed = ref(false);
+
+// スクロールイベントを監視
+const handleScroll = () => {
+  const stickyHeader = document.querySelector('.sticky-header');
+
+  if (stickyHeader) {
+    const stickyPoint = stickyHeader.getBoundingClientRect().top;
+
+    // 固定されたタイミングを検知してmaxWidthを変更
+    if (stickyPoint <= 0) {
+      isFixed.value = true;
+    } else {
+      isFixed.value = false;
+    }
+  }
+};
+
+// マウント時にスクロールイベントを追加
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+
+});
+
+// コンポーネントが破棄されるときにイベントを削除
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
 </script>
 
 <template>
@@ -89,37 +121,51 @@ useHead({
     <v-main class="bg-grey-lighten-4">
       <v-container style="max-width: 100%;">
         <!-- ===HP名称・メイン画像================================ -->
-        <v-container class="d-flex pa-0 header-v-container">
-          <v-row class="ma-0">
-            <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="auto">
-              <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-16 h-100" hover>
-                <span class="font-weight-black text-h1">Tonari</span>
-                <span class="font-weight-black text-h1">no</span>
-                <span class="font-weight-black text-h1">Nakayama</span>
-                <span class="text-h5 mt-8">Engineering blog powered by shin-701</span> 
-              </v-container>
+        <v-container class="pa-0 header-v-container">
+          <v-row class="ma-0 fill-height">
+            <v-col class="pa-1 fill-height" cols="12" sm="12" md="7" lg="5">
+              <v-card class="d-flex flex-column fill-height rounded-xl" variant="text">
+                <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-16 align-start fill-height">
+                  <span class="font-weight-black text-h1">Tonari</span>
+                  <span class="font-weight-black text-h1">no</span>
+                  <span class="font-weight-black text-h1">Nakayama</span>
+                  <span class="text-h5 mt-8">Engineering blog powered by shin-701</span> 
+                </v-container>
+              </v-card>
             </v-col>
-            <v-col class="pa-1 h-100-minw960">
-                <v-img v-bind:src="articles[0].coverImage.src" class="rounded-xl h-100" cover></v-img>
+            <v-col class="pa-1 fill-height" cols="12" sm="12" md="5" lg="7">
+              <v-card class="d-flex flex-column fill-height rounded-xl"  variant="text">
+                <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl fill-height" cover></v-img>
+              </v-card>
             </v-col>
           </v-row>
         </v-container>
 
-        <v-container class="my-1 pa-0 wide-v-container bg-grey-lighten-3 rounded-xl">
+        <!-- ===Raindrops================================ -->
+        <div id="wrapper" height="500px">
+          <!--/wrapper--></div>
+            
+        <!-- ===ヘッダーリンク================================ -->
+        <v-container ref="stickyHeader" class="pa-0 wide-v-container rounded-xl sticky-header fixed-header" :class="{ 'fixed-header-top': isFixed }">
           <v-row class="ma-0">
             <v-col class="pa-0">
               <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-                <v-card-title class="font-weight-black">HOME</v-card-title>
+                <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">HOME</v-card-title>
               </v-card>
             </v-col>
             <v-col class="pa-0">
               <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-                <v-card-title class="font-weight-black">ABOUT ME</v-card-title>
+                <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">ABOUT ME</v-card-title>
               </v-card>
             </v-col>
             <v-col class="pa-0">
               <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-                <v-card-title class="font-weight-black">CONTACT</v-card-title>
+                <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">SITE MAP</v-card-title>
+              </v-card>
+            </v-col>
+            <v-col class="pa-0">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
+                <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">CONTACT</v-card-title>
               </v-card>
             </v-col>
             
@@ -154,21 +200,21 @@ useHead({
           </v-row>
         </v-container>
         <!-- ===おすすめの投稿=======================¬========= -->
-        <v-container class="mt-15 px-0 wide-v-container">
+        <v-container class="mt-15 px-0">
           <div class="text-h3 ma-3 font-weight-black d-flex align-center justify-center">R E C O M M E N D</div>
         </v-container>
-        <v-container class="px-0 wide-v-container">
+        <v-container class="px-0">
           <v-row class="ma-0">
             <v-col class="pa-0" cols="12" sm="12" md="9" lg="9">
               <v-row class="ma-0">
                 <v-col class="pa-1" cols="12" sm="12" md="9" lg="9">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
                   </v-card>
                 </v-col>
                 <v-col class="pa-1" cols="12" sm="12" md="3" lg="3">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
                   </v-card>
                 </v-col>
               </v-row>
@@ -180,12 +226,12 @@ useHead({
                 </v-col>
                 <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
                   </v-card>
                 </v-col>
                 <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
                   </v-card>
                 </v-col>
               </v-row>
@@ -194,12 +240,12 @@ useHead({
               <v-row class="mx-0 my-1 d-flex flex-column h-100-minw960">
                 <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="4" lg="4">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
                   </v-card>
                 </v-col>
                 <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="8" lg="8">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" style="flex: none;" cover></v-img>
+                    <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
                   </v-card>
                 </v-col>
               </v-row>
@@ -208,21 +254,22 @@ useHead({
         </v-container>
 
         <!-- ===タグ・検索================================ -->
-        <v-container class="mt-15 pa-0">
-          <v-row class="mx-0 mt-6 mb-14 d-flex justify-center align-stretch">
+        <div class="py-10"></div> <!-- 空白調整 -->
+        
+        <v-container class="my-15 px-0">
+          <v-divider class="pa-6"></v-divider>
+          <v-row class="mx-0 d-flex justify-center align-stretch">
             <v-col cols="12" sm="12" md="6" lg="6">
-              <span class="mx-4 text-h5 font-weight-black">TAG</span>
-              <v-divider class="ma-3"></v-divider>
-              <div class="flex-grow-0">
+              <span class="text-h5 pb-2 font-weight-black border-b-lg">TAG</span>
+              <div class="my-5 flex-grow-0">
                 <NuxtLink v-for="tag in tags" :key="tag._id" :to="`/search/${tag.slug}`" class="text-decoration-none">
                   <v-chip class="ma-1 custom-card" color="black" density="compact" size="large">#{{ tag.name }}</v-chip>
                 </NuxtLink>
               </div>
             </v-col>
             <v-col cols="12" sm="12" md="6" lg="6">
-              <span class="mx-4 text-h5 font-weight-black">SEARCH</span>
-              <v-divider class="ma-3"></v-divider>
-              <v-text-field hide-details clearable label="検索ワードを入力して記事を探します" prepend-icon="mdi-magnify" variant="solo"></v-text-field>
+              <span class="text-h5 pb-2 font-weight-black border-b-lg">SEARCH</span>
+              <v-text-field class="my-5" hide-details clearable label="検索ワードを入力して記事を探します" prepend-icon="mdi-magnify" variant="solo"></v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -234,6 +281,8 @@ useHead({
               <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">HOME</v-btn></v-col>
               <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
               <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">ABOUT ME</v-btn></v-col>
+              <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
+              <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">SITE MAP</v-btn></v-col>
               <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
               <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">CONTACT</v-btn></v-col>
             </v-row>
@@ -276,7 +325,20 @@ useHead({
 .custom-card:hover {
   background-color: #BCAAA4; /* hover時の背景色 */
 }
-
+.fixed-header {
+  /* 画面トップまでスクロールした際に固定する */
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  transition: max-width 0.5s ease;
+  background-color: #EEEEEE;
+}
+.fixed-header-top {
+  /* 画面トップまでスクロール時に反映するcss */
+  max-width: 1280px;
+  background-color: #424242; /* hover時の背景色 */
+  color: white;
+}
 @media (max-width: 959px) {
   .v-container .wide-v-container{
     max-width: 100%;
