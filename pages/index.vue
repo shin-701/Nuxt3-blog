@@ -38,6 +38,25 @@ useHead({
   meta: [
     { name: 'description', content: 'NewtとNuxtを利用したブログです' }
   ],
+  script: [
+    {
+      src: 'https://code.jquery.com/jquery-3.4.1.min.js',
+      // integrity: 'sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=',
+      // crossorigin: 'anonymous',
+      // defer: true,
+    },
+    {
+      src: 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+      // integrity: 'sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=',
+      // crossorigin: 'anonymous',
+      // defer: true,
+    },
+    {
+      src: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/85188/raindrops.js',
+      // type: 'text/javascript',
+      // defer: true,
+    },
+  ],
 })
 
 // ===========================
@@ -107,6 +126,15 @@ const handleScroll = () => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
 
+  $(".container").raindrops({
+    color:'#A5D2DA',//水の色を指定
+    canvasHeight:650, //canvasの高さを指定。初期値は親の高さの50%。
+    waveLength: 100,//波の長さ(広がり)を指定。数値が大きいほど長さは小さくなる。初期値は340。
+    waveHeight:200,//波の高さを指定。数値が大きいほど高さは高くなる。初期値は100。
+    rippleSpeed: 0.05, //波紋のスピードを指定。数値が大きいほど波紋は速くなる。初期値は0.1。
+    density: 0.04,//水の波紋の量を指定。数値が大きいほど波紋は小さくなる。初期値は0.02。
+    frequency:5//雨粒の落ちる頻度を指定。数値が大きいほど頻度は多くなる。初期値は
+  });
 });
 
 // コンポーネントが破棄されるときにイベントを削除
@@ -142,9 +170,13 @@ onBeforeUnmount(() => {
         </v-container>
 
         <!-- ===Raindrops================================ -->
-        <div id="wrapper" height="500px">
-          <!--/wrapper--></div>
-            
+        <div class="container">
+          <div class="box">
+            <h1>Raindrops.js Demo</h1>
+            <p><a href="https://daniellaharel.com/raindrops/">Website</a></p>
+          </div>
+        </div>
+
         <!-- ===ヘッダーリンク================================ -->
         <v-container ref="stickyHeader" class="pa-0 wide-v-container rounded-xl sticky-header fixed-header" :class="{ 'fixed-header-top': isFixed }">
           <v-row class="ma-0">
@@ -356,4 +388,11 @@ onBeforeUnmount(() => {
     max-width: 100%;
   }
 }
+
+
+
+
+
+
+
 </style>
