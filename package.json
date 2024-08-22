@@ -12,6 +12,7 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@nuxtjs/google-fonts": "^3.2.0",
+    "highlight.js": "^11.10.0",
     "newt-client-js": "^3.3.3",
     "nuxt": "^3.12.4",
     "raindrops": "d-harel/raindrops",
