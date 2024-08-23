@@ -27,9 +27,9 @@
         </v-row>
       </v-container>
     </v-footer>
-    <v-footer class="pa-0 bg-grey-lighten-2 wide-v-container">
-      <v-container class="pa-0">
-        <div class="d-flex flex-column align-center text-body-2">© 2024 shin-701</div>
+    <v-footer class="pa-0 bg-grey-lighten-2">
+      <v-container class="pa-0 wide-v-container">
+        <div class="d-flex flex-column align-center justify-center text-body-2">© 2024 shin-701</div>
       </v-container>
     </v-footer>
   </v-app>
@@ -39,4 +39,5 @@
 .wide-v-container {
   max-width: 1280px;
 }
+
 </style>

@@ -12,8 +12,11 @@
     これにより、ユーザーは素早く、スムーズにページを移動できるようになります。
      =====================================-->
 <script lang="ts" setup>
-import type { Article } from '~/types/article'
 import { ref, onMounted, watchEffect } from 'vue'
+
+import type { TocItem } from '~/types/tocItem'
+import type { Article } from '~/types/article'
+
 import hljs from 'highlight.js'
 import 'highlight.js/styles/rainbow.css' // 好みのテーマをインポート
 
@@ -37,10 +40,9 @@ const { data } = await useAsyncData(`article-${slug}`, async () => {
 const article = data.value
 
 // ===========================
-//  ◆呼び出し関数
+//  ◆スクロールアニメーションcss適用
 // ===========================
-// maxWidthを動的に設定するためのref
-const isFixed = ref(false);
+const isFixed = ref(false); // maxWidthを動的に設定するためのref
 
 // スクロールイベントを監視
 const handleScroll = () => {
@@ -58,13 +60,62 @@ const handleScroll = () => {
   }
 };
 
-// HTMLのレンダリング後にhighlight.jsを適用
-const contentRef = ref(null)
+// ===========================
+//  ◆v-htmlにcss適用
+// ===========================
+const contentRef = ref(null) 
+
+// コードタグにhighlight.jsを適用
+function applyHighlight() {
+  const contentElement = contentRef.value as HTMLElement | null
+  if (contentElement) {
+    const codeBlocks = contentElement.querySelectorAll('pre code')
+    codeBlocks.forEach((block) => {
+      hljs.highlightElement(block as HTMLElement) // 型キャストを行う
+    })
+  }
+}
+
+// <目次>作成処理
+const toc = ref<TocItem[]>([]);
+
+function generateToc() {
+  const contentElement = contentRef.value as HTMLElement | null;
+  if (contentElement) {
+    const headers = contentElement.querySelectorAll('h1, h2, h3, h4');
+    const tocItems: TocItem[] = [];
+
+    headers.forEach((header) => {
+      let text = header.textContent?.trim() || ''; // nullの可能性を考慮して初期値を設定
+      const id = header.getAttribute('id') || text.toLowerCase().replace(/\s+/g, '-');
+      const tagName = header.tagName.toLowerCase(); // タグ名を取得
+
+      header.setAttribute('id', id);
+      
+      tocItems.push({
+        id,
+        text,
+        tagName
+      });
+    });
+
+    toc.value = tocItems;
+  }
+}
+
+// 目次インデント追加処理
+function getPadding(tagName: string | null) {
+  if (tagName === 'h2') return '20px';
+  if (tagName === 'h3') return '40px';
+  if (tagName === 'h4') return '60px';
+  return '0px';
+}
 
 // マウント時にスクロールイベントを追加
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
-  applyHighlight()
+  applyHighlight();
+  generateToc();
 });
 
 // コンポーネントが破棄されるときにイベントを削除
@@ -76,19 +127,6 @@ onBeforeUnmount(() => {
 watchEffect(() => {
   applyHighlight()
 });
-
-// ===========================
-//  ◆呼び出し関数
-// ===========================
-function applyHighlight() {
-  const contentElement = contentRef.value as HTMLElement | null
-  if (contentElement) {
-    const codeBlocks = contentElement.querySelectorAll('pre code')
-    codeBlocks.forEach((block) => {
-      hljs.highlightElement(block as HTMLElement) // 型キャストを行う
-    })
-  }
-}
 
 // ===========================
 //  ◆HEAD情報
@@ -106,13 +144,13 @@ useHead({
     <!-- ===HP名称・メイン画像================================ -->
     <v-container class="d-flex pa-0 header-v-container">
       <v-row class="ma-0">
-        <v-col class="pa-1 header-v-col" cols="12" sm="12" md="6" lg="6">
+        <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="6" lg="6">
           <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-16 h-100" hover>
             <span class="font-weight-black text-h4 text-md-h2">{{ article?.title }}</span>
             <span class="text-h5 mt-8">Engineering blog powered by shin-701</span> 
           </v-container>
         </v-col>
-        <v-col class="pa-1 header-v-col" cols="12" sm="12" md="6" lg="6">
+        <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="6" lg="6">
             <v-img v-bind:src="article?.coverImage.src" class="rounded-xl h-100" cover></v-img>
         </v-col>
       </v-row>
@@ -123,28 +161,29 @@ useHead({
       <v-row class="ma-0">
         <v-col class="pa-0">
           <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">HOME</v-card-title>
+            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">HOME</v-card-title>
           </v-card>
         </v-col>
         <v-col class="pa-0">
           <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">ABOUT ME</v-card-title>
+            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">ABOUT ME</v-card-title>
           </v-card>
         </v-col>
         <v-col class="pa-0">
           <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">SITE MAP</v-card-title>
+            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">SITE MAP</v-card-title>
           </v-card>
         </v-col>
         <v-col class="pa-0">
           <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">CONTACT</v-card-title>
+            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">CONTACT</v-card-title>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
 
     <!-- ===記事================================ -->
+    <v-spacer class="py-10"></v-spacer>
     <v-container class="py-16 wide-v-container">
       <v-row class="d-flex justify-center align-stretch">
         <v-spacer></v-spacer>
@@ -159,8 +198,10 @@ useHead({
               <v-list class="ml-4 bg-grey-lighten-4" variant="text">
                 <v-list-item class="font-weight-black">on this page</v-list-item>
                 <v-divider thickness="3"></v-divider>
-                <v-list-item >aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</v-list-item>
-                <v-list-item title="Fukuoka"></v-list-item>
+                <NuxtLink v-for="(item, index) in toc" :key="index" :to="`/articles/${article?.slug}/#${item.id || ''}`" class="text-decoration-none">
+                  <v-list-item class="py-0 mt-1 text-black rounded-xl" hover
+                    style="min-height: 36px;" :style="{ paddingLeft: getPadding(item.tagName) }">{{ item.text }}</v-list-item>
+                </NuxtLink>
               </v-list>
             </div>
           </v-container>
@@ -197,9 +238,14 @@ useHead({
 }
 .fixed-header-top {
   /* 画面トップまでスクロール時に反映するcss */
-  max-width: 50%;
+  max-width: 60rem;
   background-color: #424242; /* hover時の背景色 */
   color: white;
+}
+.toc :hover {
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: #BCAAA4 !important;
 }
 
 @media (max-width: 959px) {
@@ -221,19 +267,23 @@ useHead({
 }
 /* マークダウンで生成された本文の行間を調整 */
 /* 深いセレクタを使用して、v-htmlで挿入されたHTMLにスタイルを適用 */
-:deep(.markdown-content h2) {
-  line-height: 2.3; /* 行間の調整 */
-  margin-bottom: 1em; /* 段落間のスペースを広げる */
-}
-:deep(.markdown-content ul) {
-  margin: 1em; /* 段落間のスペースを広げる */
-}
-:deep(.markdown-content ol) {
-  margin: 1em; /* 段落間のスペースを広げる */
+
+:deep(.markdown-content h1),
+:deep(.markdown-content h2),
+:deep(.markdown-content h3),
+:deep(.markdown-content h4),
+:deep(.markdown-content h5),
+:deep(.markdown-content h6),
+:deep(.markdown-content hr) {
+  margin-bottom: 1em;
 }
 :deep(.markdown-content p) {
-  line-height: 2.3; /* 行間の調整 */
-  margin-bottom: 1.5em; /* 段落間のスペースを広げる */
+  line-height: 2.3;
+  margin-bottom: 1em;
+}
+:deep(.markdown-content ul),
+:deep(.markdown-content ol) {
+  margin: 1.5em; /* 段落間のスペースを広げる */
 }
 :deep(.markdown-content li) {
   list-style-position: inside;
@@ -243,6 +293,8 @@ useHead({
   padding: 10px;
   background-color: #474949;
   border-radius: 5px;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
 </style>

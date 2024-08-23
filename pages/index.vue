@@ -26,9 +26,10 @@
 ========================================== -->
 
 <script lang="ts" setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
 import type { Article } from '~/types/article'
 import type { Tag } from '~/types/tag'
-import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 // ===========================
 //  ◆Head情報
@@ -169,22 +170,22 @@ onBeforeUnmount(() => {
         <v-row class="ma-0">
           <v-col class="pa-0">
             <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">HOME</v-card-title>
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">HOME</v-card-title>
             </v-card>
           </v-col>
           <v-col class="pa-0">
             <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">ABOUT ME</v-card-title>
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">ABOUT ME</v-card-title>
             </v-card>
           </v-col>
           <v-col class="pa-0">
             <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">SITE MAP</v-card-title>
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">SITE MAP</v-card-title>
             </v-card>
           </v-col>
           <v-col class="pa-0">
             <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-2 font-weight-black border-b-md">CONTACT</v-card-title>
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">CONTACT</v-card-title>
             </v-card>
           </v-col>
         </v-row>
