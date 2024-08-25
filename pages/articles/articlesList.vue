@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute } from 'vue-router';
 
 import type { Article } from '~/types/article'
 import type { Tag } from '~/types/tag'
@@ -34,9 +35,37 @@ import type { Tag } from '~/types/tag'
 // ===========================
 //  ◆Newtからデータ取得処理
 // ===========================
+const route = useRoute();
+const searchWords = Array.isArray(route.query.searchWords) ? route.query.searchWords.join(' ') : route.query.searchWords || '';
+
 // 投稿(article)取得
 const { data } = await useAsyncData('articles', async () => {
   const { $newtClient } = useNuxtApp()
+  // 検索ワードの指定がある場合は、抽出条件を指定してAPIを実行する
+  if (searchWords) {
+    // タグの取得結果をPromiseから取り出すためにawaitを使用
+    const tagsTemp = await $newtClient.getContents<Tag>({
+      appUid: 'blog',
+      modelUid: 'tag',
+      query: {
+        slug: searchWords,
+        select: ['_id']
+      }
+    });
+
+    // tagsTempからIDリストを抽出
+    const tagIds = tagsTemp.items.map(tag => tag._id);
+
+    return await $newtClient.getContents<Article>({
+      appUid: 'blog',
+      modelUid: 'article',
+      query: {
+        tags: { in: tagIds},
+        // 「-」をつけることで最新の投稿から降順で取得する
+        order: ['-_sys.createdAt']
+      }
+    })
+  }
   return await $newtClient.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
@@ -62,6 +91,7 @@ const { data: tagData } = await useAsyncData('tags', async () => {
 
 // 全投稿データ
 const articles = data.value?.items;
+
 // 全タグデータ
 const tags = tagData.value?.items;
 
@@ -233,7 +263,8 @@ useHead({
         <v-divider class="pa-6"></v-divider>
         <span class="text-h5 pb-2 font-weight-black border-b-lg">TAG</span>
         <div class="my-5 flex-grow-0">
-          <NuxtLink v-for="tag in tags" :key="tag._id" :to="`/search/${tag.slug}`" class="text-decoration-none">
+          <NuxtLink v-for="tag in tags" :key="tag._id" 
+            :to="{ path: `/articles/articlesList`, query: { searchWords: `${tag.slug}` } }" class="text-decoration-none">
             <v-chip class="ma-1 custom-card" color="black" density="compact" size="large">#{{ tag.name }}</v-chip>
           </NuxtLink>
         </div>

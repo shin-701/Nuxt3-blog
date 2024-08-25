@@ -404,7 +404,8 @@ useHead({
           <v-col cols="12" sm="12" md="6" lg="6">
             <span class="text-h5 pb-2 font-weight-black border-b-lg">TAG</span>
             <div class="my-5 flex-grow-0">
-              <NuxtLink v-for="tag in tags" :key="tag._id" :to="`/search/${tag.slug}`" class="text-decoration-none">
+              <NuxtLink v-for="tag in tags" :key="tag._id" 
+                :to="{ path: `/articles/articlesList`, query: { searchWords: `${tag.slug}` } }" class="text-decoration-none">
                 <v-chip class="ma-1 custom-card" color="black" density="compact" size="large">#{{ tag.name }}</v-chip>
               </NuxtLink>
             </div>
