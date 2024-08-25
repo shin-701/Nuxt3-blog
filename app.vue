@@ -6,14 +6,30 @@
     <!-- ===フッター================================ -->
     <v-footer class="bg-grey-darken-3">
       <v-container class="mt-10 pa-0 wide-v-container">
-        <v-row class="mx-3">
-          <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">HOME</v-btn></v-col>
+        <v-row class="mx-3 pb-10">
+          <v-col class="pa-0 d-flex justify-center align-center">
+            <NuxtLink to="/" class="text-decoration-none">
+              <v-btn class="rounded-xl px-8 text-white" variant="text">HOME</v-btn>
+            </NuxtLink>
+          </v-col>
           <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
-          <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">ABOUT ME</v-btn></v-col>
+          <v-col class="pa-0 d-flex justify-center align-center">
+            <NuxtLink to="/aboutMe" class="text-decoration-none">
+              <v-btn class="rounded-xl px-8 text-white" variant="text">ABOUT ME</v-btn>
+            </NuxtLink>
+          </v-col>
           <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
-          <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">SITE MAP</v-btn></v-col>
+          <v-col class="pa-0 d-flex justify-center align-center">
+            <NuxtLink to="/siteMap" class="text-decoration-none">
+              <v-btn class="rounded-xl px-8 text-white" variant="text">SITE MAP</v-btn>
+            </NuxtLink>
+          </v-col>
           <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
-          <v-col class="pa-0 d-flex justify-center align-center"><v-btn class="custom-card rounded-xl px-8" variant="text">CONTACT</v-btn></v-col>
+          <v-col class="pa-0 d-flex justify-center align-center">
+            <NuxtLink to="/contact" class="text-decoration-none">
+              <v-btn class="rounded-xl px-8 text-white" variant="text">CONTACT</v-btn>
+            </NuxtLink>
+          </v-col>
         </v-row>
         <v-row class="mt-10 mb-3">
           <v-col class="d-flex flex-column align-center pa-0">

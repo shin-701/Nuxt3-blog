@@ -32,35 +32,6 @@ import type { Article } from '~/types/article'
 import type { Tag } from '~/types/tag'
 
 // ===========================
-//  ◆Head情報
-// ===========================
-useHead({
-  title: 'Newt・Nuxtブログ',
-  meta: [
-    { name: 'description', content: 'NewtとNuxtを利用したブログです' }
-  ],
-  script: [
-    {
-      src: 'https://code.jquery.com/jquery-3.4.1.min.js',
-      // integrity: 'sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=',
-      // crossorigin: 'anonymous',
-      // defer: true,
-    },
-    {
-      src: 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-      // integrity: 'sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=',
-      // crossorigin: 'anonymous',
-      // defer: true,
-    },
-    {
-      src: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/85188/raindrops.js',
-      // type: 'text/javascript',
-      // defer: true,
-    },
-  ],
-})
-
-// ===========================
 //  ◆Newtからデータ取得処理
 // ===========================
 // 投稿(article)取得
@@ -91,8 +62,24 @@ const { data: tagData } = await useAsyncData('tags', async () => {
 
 // 全投稿データ
 const articles = data.value?.items;
+// 直近の3投稿
+const resentlyArticles = data.value?.items.slice(0,3);
+
 // おすすめの投稿データ
-const recommendArticles = articles?.filter(article => article.recommendation === true);
+const recommendArticles = computed(() => {
+  return articles?.filter(article => article.recommendation === true).slice(0, 7) || [];
+});
+
+// BentoUIにはめる為、別変数に格納する
+const recommendArticle1 = computed(() => recommendArticles.value[0]);
+const recommendArticle2 = computed(() => recommendArticles.value[1]);
+const recommendArticle3 = computed(() => recommendArticles.value[2]);
+const recommendArticle4 = computed(() => recommendArticles.value[3]);
+const recommendArticle5 = computed(() => recommendArticles.value[4]);
+const recommendArticle6 = computed(() => recommendArticles.value[5]);
+const recommendArticle7 = computed(() => recommendArticles.value[6]);
+
+
 // 全タグデータ
 const tags = tagData.value?.items;
 
@@ -129,7 +116,7 @@ onMounted(() => {
 
   $(".raindrops").raindrops({
     color:'#D7CCC8',//水の色を指定
-    canvasHeight:470, //canvasの高さを指定。初期値は親の高さの50%。
+    canvasHeight:570, //canvasの高さを指定。初期値は親の高さの50%。
     waveLength: 100,//波の長さ(広がり)を指定。数値が大きいほど長さは小さくなる。初期値は340。
     waveHeight:200,//波の高さを指定。数値が大きいほど高さは高くなる。初期値は100。
     rippleSpeed: 0.05, //波紋のスピードを指定。数値が大きいほど波紋は速くなる。初期値は0.1。
@@ -143,24 +130,47 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 
+// ===========================
+//  ◆Head情報
+// ===========================
+useHead({
+  title: 'Newt・Nuxtブログ',
+  meta: [
+    { name: 'description', content: 'NewtとNuxtを利用したブログです' }
+  ],
+  script: [
+    {
+      src: 'https://code.jquery.com/jquery-3.4.1.min.js',
+      // integrity: 'sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=',
+      // crossorigin: 'anonymous',
+      // defer: true,
+    },
+    {
+      src: 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+      // integrity: 'sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=',
+      // crossorigin: 'anonymous',
+      // defer: true,
+    },
+    {
+      src: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/85188/raindrops.js',
+      // type: 'text/javascript',
+      // defer: true,
+    },
+  ],
+})
 </script>
 
 <template>
   <v-main class="bg-grey-lighten-4">
     <!-- ===Raindrops================================ -->
     <!-- ===HP名称・メイン画像================================ -->
-    <v-container class="pb-0 header-v-container">
+    <v-container class="pa-0 header-v-container">
       <v-card class="raindrops fill-height rounded-xl bg-grey-lighten-3 d-flex flex-column" variant="text">
-        <v-row class="ma-0 align-end">
-          <v-col class="d-flex align-center" style="z-index:1;" cols="12" sm="12" md="12" lg="12">
-            <span class="font-weight-black text-h1 d-flex justify-center">Tonari no Nakayama</span>
-          </v-col>
-        </v-row>
-        <v-row class="ma-0">
-          <v-col style="z-index:1;">
-            <v-card-subtitle ><span class="text-h5 mt-8">Engineering blog powered by shin-701</span></v-card-subtitle>
-          </v-col>
-        </v-row>
+        <div style="z-index:1;">
+          <span class="font-weight-black d-flex justify-center" style="font-size: 11rem;">Tonari no</span>
+          <span class="d-flex justify-center" style="font-size: 1.6rem;">Engineering blog powered by shin-701</span>
+          <span class="font-weight-black d-flex justify-center" style="font-size: 13rem;">Nakayama</span>
+        </div>
       </v-card>
     </v-container>
 
@@ -169,24 +179,36 @@ onBeforeUnmount(() => {
       <v-container ref="stickyHeader" class="pa-0 wide-v-container rounded-xl sticky-header fixed-header" :class="{ 'fixed-header-top': isFixed }">
         <v-row class="ma-0">
           <v-col class="pa-0">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">HOME</v-card-title>
-            </v-card>
+            <NuxtLink to="/aboutMe" class="text-decoration-none">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                  :class="{ 'fixed-color': isFixed }">ABOUT ME</v-card-title>
+              </v-card>
+            </NuxtLink>
           </v-col>
           <v-col class="pa-0">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">ABOUT ME</v-card-title>
-            </v-card>
+            <NuxtLink to="/articles/articlesList" class="text-decoration-none">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                  <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                    :class="{ 'fixed-color': isFixed }">ARTICLES</v-card-title>
+              </v-card>
+            </NuxtLink>
           </v-col>
           <v-col class="pa-0">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">SITE MAP</v-card-title>
-            </v-card>
+            <NuxtLink to="/siteMap" class="text-decoration-none">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                  :class="{ 'fixed-color': isFixed }">SITE MAP</v-card-title>
+              </v-card>
+            </NuxtLink>
           </v-col>
           <v-col class="pa-0">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">CONTACT</v-card-title>
-            </v-card>
+            <NuxtLink to="/contact" class="text-decoration-none">
+              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                  :class="{ 'fixed-color': isFixed }">CONTACT</v-card-title>
+              </v-card>
+            </NuxtLink>
           </v-col>
         </v-row>
       </v-container>
@@ -197,7 +219,7 @@ onBeforeUnmount(() => {
       </v-container>
       <v-container class="pa-0">
         <v-row class="ma-0">
-          <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-5">
+          <v-col v-for="article in resentlyArticles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-5">
             <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
               <v-card class="mx-1 d-flex flex-column h-100 bg-grey-lighten-3 rounded-xl" hover>
                 <v-img v-bind:src="article.coverImage.src" alt="Card Header Image" height="200px" class="rounded-xl" style="flex: none;" cover></v-img>
@@ -218,7 +240,10 @@ onBeforeUnmount(() => {
           </v-col>
         </v-row>
       </v-container>
-      <!-- ===おすすめの投稿=======================¬========= -->
+
+      <div class="py-10"></div> <!-- 空白調整 -->
+
+      <!-- ===おすすめの投稿================================ -->
       <v-container class="mt-15 px-0">
         <div class="text-h3 ma-3 font-weight-black d-flex align-center justify-center">R E C O M M E N D</div>
       </v-container>
@@ -228,29 +253,99 @@ onBeforeUnmount(() => {
             <v-row class="ma-0">
               <v-col class="pa-1" cols="12" sm="12" md="9" lg="9">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle1?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-7 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle1?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle1._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle1._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle1.tags" :key="tag._id" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="3" lg="3">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle2?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle2?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle2._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle2._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle2.tags" :key="tag._id" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
             </v-row>
             <v-row class="ma-0">
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle3?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem;">{{ recommendArticle3?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle3._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle3._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle3.tags" :key="tag._id" color="primary" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle4?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle4?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle4._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle4._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle4.tags" :key="tag._id" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle5?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black"  style="font-size: 1rem; white-space: normal;">{{ recommendArticle5?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle5._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle5._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle5.tags" :key="tag._id" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
             </v-row>
@@ -259,12 +354,40 @@ onBeforeUnmount(() => {
             <v-row class="mx-0 my-1 d-flex flex-column h-100-minw960">
               <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle6?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle6?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle6._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle6._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle6.tags" :key="tag._id" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
               <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="8" lg="8">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="articles[0].coverImage.src" alt="Card Header Image" class="rounded-xl h-100" cover></v-img>
+                  <v-img v-bind:src="recommendArticle7?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                      <div class="transparent-background rounded-xl w-100">
+                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle7?.title }}</v-card-title>
+                        <v-card-subtitle class="px-1 py-0 text-caption">
+                          <time :datetime="recommendArticle7._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle7._sys.raw.firstPublishedAt) }}</time>
+                        </v-card-subtitle>
+                        <v-card-actions class="pa-1" style="min-height: auto">
+                          <v-chip class="pa-1" v-for="tag in recommendArticle7.tags" :key="tag._id" density="compact" size="default">
+                            #{{ tag.name }}
+                          </v-chip>
+                        </v-card-actions>
+                      </div>
+                    </div>
+                  </v-img>
                 </v-card>
               </v-col>
             </v-row>
@@ -326,8 +449,14 @@ onBeforeUnmount(() => {
   /* 画面トップまでスクロール時に反映するcss */
   max-width: 1280px;
   background-color: #424242; /* hover時の背景色 */
+}
+.fixed-color {
   color: white;
 }
+.transparent-background {
+  background-color: rgba(0, 0, 0, 0.4); /* 黒色で透明度50% */
+}
+
 @media (max-width: 959px) {
   .v-container .wide-v-container{
     max-width: 100%;

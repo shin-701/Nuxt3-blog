@@ -147,7 +147,6 @@ useHead({
         <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="6" lg="6">
           <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-16 h-100" hover>
             <span class="font-weight-black text-h4 text-md-h2">{{ article?.title }}</span>
-            <span class="text-h5 mt-8">Engineering blog powered by shin-701</span> 
           </v-container>
         </v-col>
         <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="6" lg="6">
@@ -160,24 +159,36 @@ useHead({
     <v-container ref="stickyHeader" class="pa-0 wide-v-container rounded-xl sticky-header fixed-header" :class="{ 'fixed-header-top': isFixed }">
       <v-row class="ma-0">
         <v-col class="pa-0">
-          <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">HOME</v-card-title>
-          </v-card>
+          <NuxtLink to="/" class="text-decoration-none">
+            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                :class="{ 'fixed-color': isFixed }">HOME</v-card-title>
+            </v-card>
+          </NuxtLink>
         </v-col>
         <v-col class="pa-0">
-          <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">ABOUT ME</v-card-title>
-          </v-card>
+          <NuxtLink to="/articles/articlesList" class="text-decoration-none">
+            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                  :class="{ 'fixed-color': isFixed }">ARTICLES</v-card-title>
+            </v-card>
+          </NuxtLink>
         </v-col>
         <v-col class="pa-0">
-          <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">SITE MAP</v-card-title>
-          </v-card>
+          <NuxtLink to="/siteMap" class="text-decoration-none">
+            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                :class="{ 'fixed-color': isFixed }">SITE MAP</v-card-title>
+            </v-card>
+          </NuxtLink>
         </v-col>
         <v-col class="pa-0">
-          <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">CONTACT</v-card-title>
-          </v-card>
+          <NuxtLink to="/contact" class="text-decoration-none">
+            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+              <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                :class="{ 'fixed-color': isFixed }">CONTACT</v-card-title>
+            </v-card>
+          </NuxtLink>
         </v-col>
       </v-row>
     </v-container>
@@ -192,11 +203,11 @@ useHead({
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="article?.body" class="py-16 markdown-content" ref="contentRef"/>
         </v-col>
-        <v-col class="px-10" cols="12" sm="12" md="3" lg="3">
-          <v-container class="py-0 pl-6">
+        <v-col class="px-10 position-sticky" cols="12" sm="12" md="3" lg="3">
+          <v-container class="py-0 pl-6 position-sticky">
             <div class="border-s-md">
               <v-list class="ml-4 bg-grey-lighten-4" variant="text">
-                <v-list-item class="font-weight-black">on this page</v-list-item>
+                <v-list-item class="font-weight-black">もくじ</v-list-item>
                 <v-divider thickness="3"></v-divider>
                 <NuxtLink v-for="(item, index) in toc" :key="index" :to="`/articles/${article?.slug}/#${item.id || ''}`" class="text-decoration-none">
                   <v-list-item class="py-0 mt-1 text-black rounded-xl" hover
@@ -238,8 +249,11 @@ useHead({
 }
 .fixed-header-top {
   /* 画面トップまでスクロール時に反映するcss */
-  max-width: 60rem;
+  max-width: 900px;
   background-color: #424242; /* hover時の背景色 */
+  color: white;
+}
+.fixed-color {
   color: white;
 }
 .toc :hover {
