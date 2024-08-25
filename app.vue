@@ -51,9 +51,11 @@
   </v-app>
 </template>
 
-<style scoped>
+<style>
 .wide-v-container {
   max-width: 1280px;
 }
-
+html {
+  scroll-padding-top: 85px; /* 固定ヘッダーに対するスクロール調整 */
+}
 </style>

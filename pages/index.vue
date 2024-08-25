@@ -254,7 +254,7 @@ useHead({
               <v-col class="pa-1" cols="12" sm="12" md="9" lg="9">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle1?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-7 py-4 text-white">
+                    <div class="d-flex flex-column fill-height align-start justify-end px-5 py-4 text-white">
                       <div class="transparent-background rounded-xl w-100">
                         <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle1?.title }}</v-card-title>
                         <v-card-subtitle class="px-1 py-0 text-caption">
@@ -273,7 +273,7 @@ useHead({
               <v-col class="pa-1" cols="12" sm="12" md="3" lg="3">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle2?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
                       <div class="transparent-background rounded-xl w-100">
                         <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle2?.title }}</v-card-title>
                         <v-card-subtitle class="px-1 py-0 text-caption">
@@ -294,7 +294,7 @@ useHead({
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle3?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
                       <div class="transparent-background rounded-xl w-100">
                         <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem;">{{ recommendArticle3?.title }}</v-card-title>
                         <v-card-subtitle class="px-1 py-0 text-caption">
@@ -332,7 +332,7 @@ useHead({
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle5?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
                       <div class="transparent-background rounded-xl w-100">
                         <v-card-title class="pa-1 font-weight-black"  style="font-size: 1rem; white-space: normal;">{{ recommendArticle5?.title }}</v-card-title>
                         <v-card-subtitle class="px-1 py-0 text-caption">
@@ -355,7 +355,7 @@ useHead({
               <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="4" lg="4">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle6?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
                       <div class="transparent-background rounded-xl w-100">
                         <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle6?.title }}</v-card-title>
                         <v-card-subtitle class="px-1 py-0 text-caption">
@@ -374,7 +374,7 @@ useHead({
               <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="8" lg="8">
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle7?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
                       <div class="transparent-background rounded-xl w-100">
                         <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle7?.title }}</v-card-title>
                         <v-card-subtitle class="px-1 py-0 text-caption">

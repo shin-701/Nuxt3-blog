@@ -124,7 +124,7 @@ useHead({
             </NuxtLink>
             </v-col>
             <v-col class="pa-0">
-            <NuxtLink to="/articles/articlesList.vue" class="text-decoration-none">
+            <NuxtLink to="/articles/articlesList" class="text-decoration-none">
                 <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
                     <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
                     :class="{ 'fixed-color': isFixed }">ARTICLES</v-card-title>
