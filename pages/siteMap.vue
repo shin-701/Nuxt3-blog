@@ -186,10 +186,10 @@ useHead({
     background-color: #EEEEEE;
 }
 .fixed-header-top {
-/* 画面トップまでスクロール時に反映するcss */
-    max-width: 900px;
-    background-color: #424242; /* hover時の背景色 */
-    color: white;
+  /* 画面トップまでスクロール時に反映するcss */
+  max-width: 50%;
+  background-color: #424242; /* hover時の背景色 */
+  color: white;
 }
 .fixed-color {
     color: white;

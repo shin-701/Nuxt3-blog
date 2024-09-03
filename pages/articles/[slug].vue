@@ -203,8 +203,8 @@ useHead({
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="article?.body" class="py-16 markdown-content" ref="contentRef"/>
         </v-col>
-        <v-col class="px-10 position-sticky" cols="12" sm="12" md="3" lg="3">
-          <v-container class="py-0 pl-6 position-sticky">
+        <v-col class="px-10" cols="12" sm="12" md="3" lg="3">
+          <v-container class="py-0" style="position: sticky; top: 75px;">
             <div class="border-s-md">
               <v-list class="ml-4 bg-grey-lighten-4" variant="text">
                 <v-list-item class="font-weight-black">もくじ</v-list-item>
@@ -249,7 +249,7 @@ useHead({
 }
 .fixed-header-top {
   /* 画面トップまでスクロール時に反映するcss */
-  max-width: 900px;
+  max-width: 50%;
   background-color: #424242; /* hover時の背景色 */
   color: white;
 }

@@ -1,122 +1,153 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import type { Article } from '~/types/article'
-
-const route = useRoute()
 
 // ===========================
 //  ◆Newtからデータ取得処理
 // ===========================
-const { slug } = route.params
-
-const { data } = await useAsyncData(`article-${slug}`, async () => {
-const { $newtClient } = useNuxtApp()
-return await $newtClient.getFirstContent<Article>({
+// 投稿(article)取得
+const { data } = await useAsyncData('articles', async () => {
+  const { $newtClient } = useNuxtApp()
+  return await $newtClient.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
     query: {
-    slug
+      // 「-」をつけることで最新の投稿から降順で取得する
+      order: ['-_sys.createdAt']
     }
+  })
 })
-})
-const article = data.value
+
+// 全投稿データ
+const articles = data.value?.items;
 
 // ===========================
-//  ◆スクロールアニメーションcss適用
+//  ◆呼び出し関数
 // ===========================
-const isFixed = ref(false); // maxWidthを動的に設定するためのref
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString()
+};
+
+// maxWidthを動的に設定するためのref
+const isFixed = ref(false);
 
 // スクロールイベントを監視
 const handleScroll = () => {
-const stickyHeader = document.querySelector('.sticky-header');
+  const stickyHeader = document.querySelector('.sticky-header');
 
-if (stickyHeader) {
+  if (stickyHeader) {
     const stickyPoint = stickyHeader.getBoundingClientRect().top;
 
     // 固定されたタイミングを検知してmaxWidthを変更
     if (stickyPoint <= 0) {
-    isFixed.value = true;
+      isFixed.value = true;
     } else {
-    isFixed.value = false;
+      isFixed.value = false;
     }
-}
+  }
 };
-
 
 // マウント時にスクロールイベントを追加
 onMounted(() => {
-window.addEventListener('scroll', handleScroll);
+  window.addEventListener('scroll', handleScroll);
+
+  $(".raindrops").raindrops({
+    color:'#D7CCC8',//水の色を指定
+    canvasHeight:570, //canvasの高さを指定。初期値は親の高さの50%。
+    waveLength: 100,//波の長さ(広がり)を指定。数値が大きいほど長さは小さくなる。初期値は340。
+    waveHeight:200,//波の高さを指定。数値が大きいほど高さは高くなる。初期値は100。
+    rippleSpeed: 0.05, //波紋のスピードを指定。数値が大きいほど波紋は速くなる。初期値は0.1。
+    density: 0.04,//水の波紋の量を指定。数値が大きいほど波紋は小さくなる。初期値は0.02。
+    frequency:5//雨粒の落ちる頻度を指定。数値が大きいほど頻度は多くなる。初期値は
+  });
 });
 
 // コンポーネントが破棄されるときにイベントを削除
 onBeforeUnmount(() => {
-window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('scroll', handleScroll);
 });
 
 // ===========================
-//  ◆HEAD情報
+//  ◆Head情報
 // ===========================
 useHead({
-title: article?.title,
-meta: [
-    { name: 'description', content: '投稿詳細ページです' }
-]
+  title: 'Newt・Nuxtブログ',
+  meta: [
+    { name: 'description', content: 'NewtとNuxtを利用したブログです' }
+  ],
+  script: [
+    {
+      src: 'https://code.jquery.com/jquery-3.4.1.min.js',
+      // integrity: 'sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=',
+      // crossorigin: 'anonymous',
+      // defer: true,
+    },
+    {
+      src: 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+      // integrity: 'sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=',
+      // crossorigin: 'anonymous',
+      // defer: true,
+    },
+    {
+      src: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/85188/raindrops.js',
+      // type: 'text/javascript',
+      // defer: true,
+    },
+  ],
 })
 </script>
 
 <template>
 <v-main class="bg-grey-lighten-4">
+    <!-- ===Raindrops================================ -->
     <!-- ===HP名称・メイン画像================================ -->
-    <v-container class="d-flex pa-0 header-v-container">
-    <v-row class="ma-0">
-        <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="6" lg="6">
-        <v-container class="d-flex flex-column rounded-xl justify-center bg-grey-lighten-3 pa-16 h-100" hover>
-            <span class="font-weight-black text-h4 text-md-h2">{{ article?.title }}</span>
-        </v-container>
-        </v-col>
-        <v-col class="pa-1 h-100-minw960" cols="12" sm="12" md="6" lg="6">
-            <v-img v-bind:src="article?.coverImage.src" class="rounded-xl h-100" cover></v-img>
-        </v-col>
-    </v-row>
+    <v-container class="pa-0 header-v-container">
+      <v-card class="raindrops fill-height rounded-xl bg-grey-lighten-3 d-flex flex-column" variant="text">
+        <div style="z-index:1;">
+          <span class="font-weight-black d-flex justify-center" style="font-size: 10rem;">Tonari no</span>
+          <span class="d-flex justify-center" style="font-size: 1.6rem;">Engineering blog powered by shin-701</span>
+          <span class="font-weight-black d-flex justify-center" style="font-size: 12rem;">Nakayama</span>
+        </div>
+      </v-card>
     </v-container>
 
     <!-- ===ヘッダーリンク================================ -->
-    <v-container ref="stickyHeader" class="pa-0 wide-v-container rounded-xl fixed-header" :class="{ 'fixed-header-top': isFixed }">
-    <v-row class="ma-0">
-        <v-col class="pa-0">
-        <NuxtLink to="/aboutMe" class="text-decoration-none">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                :class="{ 'fixed-color': isFixed }">ABOUT ME</v-card-title>
-            </v-card>
-        </NuxtLink>
-        </v-col>
-        <v-col class="pa-0">
-        <NuxtLink to="/articles/articlesList" class="text-decoration-none">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
+    <v-container ref="stickyHeader" class="pa-0 my-3 wide-v-container rounded-xl sticky-header fixed-header" :class="{ 'fixed-header-top': isFixed }">
+        <v-row class="ma-0">
+            <v-col class="pa-0">
+            <NuxtLink to="/" class="text-decoration-none">
+                <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md" color="black"
+                    :class="{ 'fixed-color': isFixed }">HOME</v-card-title>
+                </v-card>
+            </NuxtLink>
+            </v-col>
+            <v-col class="pa-0">
+            <NuxtLink to="/articles/articlesList" class="text-decoration-none">
+                <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                    <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                    :class="{ 'fixed-color': isFixed }">ARTICLES</v-card-title>
+                </v-card>
+            </NuxtLink>
+            </v-col>
+            <v-col class="pa-0">
+            <NuxtLink to="/siteMap" class="text-decoration-none">
+                <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
                 <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                :class="{ 'fixed-color': isFixed }">ARTICLES</v-card-title>
-            </v-card>
-        </NuxtLink>
-        </v-col>
-        <v-col class="pa-0">
-        <NuxtLink to="/siteMap" class="text-decoration-none">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                :class="{ 'fixed-color': isFixed }">SITE MAP</v-card-title>
-            </v-card>
-        </NuxtLink>
-        </v-col>
-        <v-col class="pa-0">
-        <NuxtLink to="/contact" class="text-decoration-none">
-            <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain">
-            <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                :class="{ 'fixed-color': isFixed }">CONTACT</v-card-title>
-            </v-card>
-        </NuxtLink>
-        </v-col>
-    </v-row>
+                    :class="{ 'fixed-color': isFixed }">SITE MAP</v-card-title>
+                </v-card>
+            </NuxtLink>
+            </v-col>
+            <v-col class="pa-0">
+            <NuxtLink to="/contact" class="text-decoration-none">
+                <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
+                    :class="{ 'fixed-color': isFixed }">CONTACT</v-card-title>
+                </v-card>
+            </NuxtLink>
+            </v-col>
+        </v-row>
     </v-container>
 
     <!-- ===記事================================ -->
@@ -155,10 +186,10 @@ meta: [
     background-color: #EEEEEE;
 }
 .fixed-header-top {
-/* 画面トップまでスクロール時に反映するcss */
-    max-width: 900px;
-    background-color: #424242; /* hover時の背景色 */
-    color: white;
+  /* 画面トップまでスクロール時に反映するcss */
+  max-width: 50%;
+  background-color: #424242; /* hover時の背景色 */
+  color: white;
 }
 .fixed-color {
     color: white;

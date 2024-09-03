@@ -179,34 +179,23 @@ useHead({
       <v-container ref="stickyHeader" class="pa-0 wide-v-container rounded-xl sticky-header fixed-header" :class="{ 'fixed-header-top': isFixed }">
         <v-row class="ma-0">
           <v-col class="pa-0">
-            <NuxtLink to="/aboutMe" class="text-decoration-none">
-              <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
-                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                  :class="{ 'fixed-color': isFixed }">ABOUT ME</v-card-title>
-              </v-card>
-            </NuxtLink>
-          </v-col>
-          <v-col class="pa-0">
             <NuxtLink to="/articles/articlesList" class="text-decoration-none">
               <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
-                  <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                    :class="{ 'fixed-color': isFixed }">ARTICLES</v-card-title>
+                  <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">ARTICLES</v-card-title>
               </v-card>
             </NuxtLink>
           </v-col>
           <v-col class="pa-0">
             <NuxtLink to="/siteMap" class="text-decoration-none">
               <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
-                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                  :class="{ 'fixed-color': isFixed }">SITE MAP</v-card-title>
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">SITE MAP</v-card-title>
               </v-card>
             </NuxtLink>
           </v-col>
           <v-col class="pa-0">
             <NuxtLink to="/contact" class="text-decoration-none">
               <v-card class="custom-card d-flex flex-column w-100 align-center rounded-xl" variant="plain" color="black">
-                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md"
-                  :class="{ 'fixed-color': isFixed }">CONTACT</v-card-title>
+                <v-card-title class="pa-0 mx-4 my-4 font-weight-black border-b-md">CONTACT</v-card-title>
               </v-card>
             </NuxtLink>
           </v-col>
@@ -221,7 +210,7 @@ useHead({
         <v-row class="ma-0">
           <v-col v-for="article in resentlyArticles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-5">
             <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
-              <v-card class="mx-1 d-flex flex-column h-100 bg-grey-lighten-3 rounded-xl" hover>
+              <v-card class="mx-1 d-flex flex-column h-100 bg-white rounded-xl" hover>
                 <v-img v-bind:src="article.coverImage.src" alt="Card Header Image" height="200px" class="rounded-xl" style="flex: none;" cover></v-img>
                 <v-card-title class="font-weight-black text-subtitle-1" style="white-space: normal;">
                   {{ article.title }}
@@ -449,10 +438,7 @@ useHead({
 .fixed-header-top {
   /* 画面トップまでスクロール時に反映するcss */
   max-width: 1280px;
-  background-color: #424242; /* hover時の背景色 */
-}
-.fixed-color {
-  color: white;
+  background-color: #ddd6d6; /* hover時の背景色 */
 }
 .transparent-background {
   background-color: rgba(0, 0, 0, 0.4); /* 黒色で透明度50% */

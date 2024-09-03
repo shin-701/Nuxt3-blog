@@ -236,7 +236,7 @@ useHead({
         <v-row class="ma-0">
           <v-col v-for="article in articles" :key="article._id" cols="12" sm="6" md="4" lg="4" class="pa-0 my-1">
             <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
-              <v-card class="mx-1 d-flex flex-column h-100 bg-grey-lighten-3 rounded-xl" hover>
+              <v-card class="mx-1 d-flex flex-column h-100 bg-white rounded-xl" hover>
                 <v-img v-bind:src="article.coverImage.src" alt="Card Header Image" height="200px" class="rounded-xl" style="flex: none;" cover></v-img>
                 <v-card-title class="font-weight-black text-subtitle-1" style="white-space: normal;">
                   {{ article.title }}
