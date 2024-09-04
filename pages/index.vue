@@ -262,7 +262,7 @@ useHead({
                 </NuxtLink>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="3" lg="3">
-                <NuxtLink :to="`/articles/${recommendArticle1.slug}`" class="text-decoration-none"></NuxtLink>
+                <NuxtLink :to="`/articles/${recommendArticle2.slug}`" class="text-decoration-none"></NuxtLink>
                 <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                   <v-img v-bind:src="recommendArticle2?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
                     <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
@@ -284,7 +284,7 @@ useHead({
             </v-row>
             <v-row class="ma-0">
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
-                <NuxtLink :to="`/articles/${recommendArticle1.slug}`" class="text-decoration-none">
+                <NuxtLink :to="`/articles/${recommendArticle3.slug}`" class="text-decoration-none">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="recommendArticle3?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
                       <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
@@ -305,26 +305,28 @@ useHead({
                 </NuxtLink>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
-                <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="recommendArticle4?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
-                      <div class="transparent-background rounded-xl w-100">
-                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle4?.title }}</v-card-title>
-                        <v-card-subtitle class="px-1 py-0 text-caption">
-                          <time :datetime="recommendArticle4._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle4._sys.raw.firstPublishedAt) }}</time>
-                        </v-card-subtitle>
-                        <v-card-actions class="pa-1" style="min-height: auto">
-                          <v-chip class="pa-1" v-for="tag in recommendArticle4.tags" :key="tag._id" density="compact" size="default">
-                            #{{ tag.name }}
-                          </v-chip>
-                        </v-card-actions>
+                <NuxtLink :to="`/articles/${recommendArticle4.slug}`" class="text-decoration-none">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
+                    <v-img v-bind:src="recommendArticle4?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                      <div class="d-flex flex-column fill-height align-start justify-end px-3 py-4 text-white">
+                        <div class="transparent-background rounded-xl w-100">
+                          <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle4?.title }}</v-card-title>
+                          <v-card-subtitle class="px-1 py-0 text-caption">
+                            <time :datetime="recommendArticle4._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle4._sys.raw.firstPublishedAt) }}</time>
+                          </v-card-subtitle>
+                          <v-card-actions class="pa-1" style="min-height: auto">
+                            <v-chip class="pa-1" v-for="tag in recommendArticle4.tags" :key="tag._id" density="compact" size="default">
+                              #{{ tag.name }}
+                            </v-chip>
+                          </v-card-actions>
+                        </div>
                       </div>
-                    </div>
-                  </v-img>
-                </v-card>
+                    </v-img>
+                  </v-card>
+                </NuxtLink>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="4" lg="4">
-                <NuxtLink :to="`/articles/${recommendArticle1.slug}`" class="text-decoration-none">
+                <NuxtLink :to="`/articles/${recommendArticle5.slug}`" class="text-decoration-none">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="recommendArticle5?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
                       <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
@@ -349,7 +351,7 @@ useHead({
           <v-col class="pa-0" cols="12" sm="12" md="3" lg="3">
             <v-row class="mx-0 my-1 d-flex flex-column h-100-minw960">
               <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="4" lg="4">
-                <NuxtLink :to="`/articles/${recommendArticle1.slug}`" class="text-decoration-none">
+                <NuxtLink :to="`/articles/${recommendArticle6.slug}`" class="text-decoration-none">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="recommendArticle6?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
                       <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
@@ -370,7 +372,7 @@ useHead({
                 </NuxtLink>
               </v-col>
               <v-col class="pa-1 maxw-100-minw960" cols="12" sm="12" md="8" lg="8">
-                <NuxtLink :to="`/articles/${recommendArticle1.slug}`" class="text-decoration-none">
+                <NuxtLink :to="`/articles/${recommendArticle7.slug}`" class="text-decoration-none">
                   <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
                     <v-img v-bind:src="recommendArticle7?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
                       <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
