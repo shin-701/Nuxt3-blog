@@ -262,24 +262,25 @@ useHead({
                 </NuxtLink>
               </v-col>
               <v-col class="pa-1" cols="12" sm="12" md="3" lg="3">
-                <NuxtLink :to="`/articles/${recommendArticle2.slug}`" class="text-decoration-none"></NuxtLink>
-                <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
-                  <v-img v-bind:src="recommendArticle2?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
-                    <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
-                      <div class="transparent-background rounded-xl w-100">
-                        <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle2?.title }}</v-card-title>
-                        <v-card-subtitle class="px-1 py-0 text-caption">
-                          <time :datetime="recommendArticle2._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle2._sys.raw.firstPublishedAt) }}</time>
-                        </v-card-subtitle>
-                        <v-card-actions class="pa-1" style="min-height: auto">
-                          <v-chip class="pa-1" v-for="tag in recommendArticle2.tags" :key="tag._id" density="compact" size="default">
-                            #{{ tag.name }}
-                          </v-chip>
-                        </v-card-actions>
+                <NuxtLink :to="`/articles/${recommendArticle2.slug}`" class="text-decoration-none">
+                  <v-card class="d-flex flex-column h-100 rounded-xl" variant="plain" hover>
+                    <v-img v-bind:src="recommendArticle2?.coverImage?.src" alt="Card Header Image" class="rounded-xl h-100" cover>
+                      <div class="d-flex flex-column fill-height align-start justify-end px-3 py-3 text-white">
+                        <div class="transparent-background rounded-xl w-100">
+                          <v-card-title class="pa-1 font-weight-black" style="font-size: 1rem; white-space: normal;">{{ recommendArticle2?.title }}</v-card-title>
+                          <v-card-subtitle class="px-1 py-0 text-caption">
+                            <time :datetime="recommendArticle2._sys.raw.firstPublishedAt">{{ formatDate(recommendArticle2._sys.raw.firstPublishedAt) }}</time>
+                          </v-card-subtitle>
+                          <v-card-actions class="pa-1" style="min-height: auto">
+                            <v-chip class="pa-1" v-for="tag in recommendArticle2.tags" :key="tag._id" density="compact" size="default">
+                              #{{ tag.name }}
+                            </v-chip>
+                          </v-card-actions>
+                        </div>
                       </div>
-                    </div>
-                  </v-img>
-                </v-card>
+                    </v-img>
+                  </v-card>
+                </NuxtLink>
               </v-col>
             </v-row>
             <v-row class="ma-0">
