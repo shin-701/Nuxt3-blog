@@ -43,12 +43,14 @@ useHead({
     <v-container class="pa-0" style="height: 250px; max-width: none;">
       <v-card class="raindrops fill-height bg-grey-lighten-3" variant="text">
         <div style="z-index:1;" class="d-flex flex-column">
-          <span class="font-weight-black px-16 py-3 text-h3 text-center">Tonari no Nakayama</span>
+          <span class="font-weight-black px-16 py-3 text-h3 text-center">
+            <NuxtLink to="/" class="text-decoration-none text-black">Tonari no Nakayama</NuxtLink>
+          </span>
           <span class="d-flex justify-center text-grey-darken-2 text-sm-h6 text-subtitle-1">Engineering blog powered by shin-701</span>
         </div>
       </v-card>
     </v-container>
-    <div class="py-8"></div> <!-- 空白調整 -->
+    <div class="py-8 hidden-xs"></div> <!-- 空白調整 -->
 </template>
 
 <style scoped>

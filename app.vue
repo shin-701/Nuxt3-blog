@@ -25,7 +25,9 @@ const tags = tagData.value?.items;
   <v-app>
     <v-app-bar :elevation="0" class="bg-grey-darken-3">
     <!-- ===ヘッダー================================ -->
-      <v-app-bar-title>Tonari no Nakayama</v-app-bar-title>
+      <v-app-bar-title>
+        <NuxtLink to="/" class="text-decoration-none font-weight-black text-white">Tonari no Nakayama ブログ</NuxtLink>
+      </v-app-bar-title>
 
       <template v-slot:append>
         <v-btn icon="mdi-heart"></v-btn>
@@ -43,12 +45,14 @@ const tags = tagData.value?.items;
       <v-container class="pa-0" style="max-width: none;">
         <v-container class="mx-0 pa-3 d-flex flex-column">
           <div class="pa-2 d-flex flex-column">
-            <span class="font-weight-black text-h5 pa-1">Tonari no Nakayama</span>
+            <span class="font-weight-black text-h5 pa-1">
+              <NuxtLink to="/" class="text-decoration-none text-white">Tonari no Nakayama ブログ</NuxtLink>
+            </span>
             <span class="text-body-2 px-1">エンジニアとしての日々の学びを投稿するブログです.</span>
           </div>
           <div class="py-2">
             <NuxtLink v-for="tag in tags" :key="tag._id" 
-              :to="{ path: `/articles/articlesList`, query: { searchWords: `${tag.slug}` } }" class="text-decoration-none">
+              :to="{ path: `/articlesList`, query: { searchWords: `${tag.slug}` } }" class="text-decoration-none">
               <v-chip class="ma-1 custom-card" color="grey-lighten-2" size="default" variant="flat">#{{ tag.name }}</v-chip>
             </NuxtLink>
           </div>
@@ -59,7 +63,7 @@ const tags = tagData.value?.items;
             <v-btn class="rounded-xl px-8 text-white font-weight-black" variant="text">ホーム</v-btn>
           </NuxtLink>
           <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->
-          <NuxtLink to="/articles/articlesList" class="text-decoration-none d-flex justify-center align-center">
+          <NuxtLink to="/articlesList" class="text-decoration-none d-flex justify-center align-center">
             <v-btn class="rounded-xl px-8 text-white font-weight-black" variant="text">記事一覧</v-btn>
           </NuxtLink>
           <v-divider vertical></v-divider> <!-- 縦方向の区切り線 -->

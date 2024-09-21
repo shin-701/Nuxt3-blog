@@ -16,6 +16,7 @@ import { ref, onMounted, watchEffect } from 'vue'
 
 import type { TocItem } from '~/types/tocItem'
 import type { Article } from '~/types/article'
+import type { Author } from '~/types/author'
 
 import hljs from 'highlight.js'
 import 'highlight.js/styles/rainbow.css' // 好みのテーマをインポート
@@ -23,7 +24,7 @@ import 'highlight.js/styles/rainbow.css' // 好みのテーマをインポート
 const route = useRoute()
 
 // ===========================
-//  ◆Newtからデータ取得処理
+//  ◆Newtから記事データ取得
 // ===========================
 const { slug } = route.params
 
@@ -33,33 +34,32 @@ const { data } = await useAsyncData(`article-${slug}`, async () => {
     appUid: 'blog',
     modelUid: 'article',
     query: {
-      slug
+      slug: slug
     }
   })
 })
 const article = data.value
 
 // ===========================
-//  ◆スクロールアニメーションcss適用
+//  ◆Newtから著者データ取得
+//   現状のAPIの使用では親モデル(記事)から子モデル(著者)の情報は取得できない為、再度APIを実行して情報を取得する.
 // ===========================
-const isFixed = ref(false); // maxWidthを動的に設定するためのref
+const authorId = typeof article?.author.profileImage === 'string' 
+  ? article.author.profileImage 
+  : article?.author.profileImage?._id; // Media型の場合、適切なプロパティを使用
 
-// スクロールイベントを監視
-const handleScroll = () => {
-  const stickyHeader = document.querySelector('.sticky-header');
-
-  if (stickyHeader) {
-    const stickyPoint = stickyHeader.getBoundingClientRect().top;
-
-    // 固定されたタイミングを検知してmaxWidthを変更
-    if (stickyPoint <= 0) {
-      isFixed.value = true;
-    } else {
-      isFixed.value = false;
+const { data: authorData } = await useAsyncData(async () => {
+  const { $newtClient } = useNuxtApp()
+  return await $newtClient.getFirstContent<Author>({
+    appUid: 'blog',
+    modelUid: 'author',
+    query: {
+      authorId: authorId
     }
-  }
-};
+  })
+});
 
+const author = authorData.value
 // ===========================
 //  ◆v-htmlにcss適用
 // ===========================
@@ -106,22 +106,23 @@ function generateToc() {
 
 // 目次インデント追加処理
 function getPadding(tagName: string | null) {
-  if (tagName === 'h2') return '20px';
-  if (tagName === 'h3') return '40px';
-  if (tagName === 'h4') return '60px';
+  if (tagName === 'h2') return '10px';
+  if (tagName === 'h3') return '20px';
+  if (tagName === 'h4') return '30px';
   return '0px';
 }
 
+// ===========================
+//  ◆呼び出し関数
+// ===========================
+const formatDate = (dateString: string | undefined = '') => {
+  return new Date(dateString).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+};
+
 // マウント時にスクロールイベントを追加
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
   applyHighlight();
   generateToc();
-});
-
-// コンポーネントが破棄されるときにイベントを削除
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
 });
 
 // v-htmlで描画される内容が動的に変わる場合を考慮して、watchEffectを使って内容が更新された際にハイライトを適用しています.
@@ -146,20 +147,40 @@ useHead({
     <raindropsHeader />
   
     <!-- ===記事================================ -->
-    <v-container>
+    <v-container class="pa-0">
       <v-row class="ma-0 d-flex justify-center">
-        <v-spacer class="hidden-md" ></v-spacer>
-        <v-col cols="12" sm="12" md="8" lg="7">
+        <v-col cols="16" sm="12" md="8" lg="8">
           <v-container class="pa-8 bg-white rounded-xl">
-            <span class="font-weight-black" style="font-size: 1.6rem;">{{ article?.title }}</span>
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="article?.body" class="pt-16 markdown-content text-body-2" ref="contentRef"/>
-          </v-container>
+            <h1 class="font-weight-black" style="font-size: 1.7rem;">{{ article?.title }}</h1>
+            <v-container class="px-0 py-3 d-flex justify-between align-center">
+              <v-container class="pa-0 d-flex flex-row text-grey-darken-1 text-body-2">
+                <div>
+                  公開日：{{ formatDate(article?._sys.createdAt) }}
+                </div>
+                <div class="pl-3">
+                  最終更新日：{{ formatDate(article?._sys.updatedAt) }}
+                </div>
+              </v-container>
+              <div>
+                <v-chip class="ma-2" color="blue-grey-lighten-2">
+                  <div class="d-flex gc-1 align-center">
+                    <div>{{ article?.author.fullName }}</div> 
+                    <v-avatar>
+                      <v-img v-bind:src= author?.profileImage?.src></v-img>
+                    </v-avatar>
+                  </div>
+                </v-chip>
+              </div>
 
+            </v-container>
+            <v-img v-bind:src="article?.coverImage.src" alt="articleHeader Image" class="ma-auto my-3" :aspect-ratio="16 / 9" cover></v-img>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="article?.body" class="pt-9 markdown-content text-body-2" ref="contentRef"/>
+          </v-container>
         </v-col>
-        <v-col class="px-5 hidden-sm" cols="12" sm="12" md="4" lg="3">
+        <v-col class="pr-12 hidden-sm hidden-xs" cols="12" sm="12" md="4" lg="4">
           <v-container class="py-0 bg-white rounded-xl" style="position: sticky; top: 75px;">
-            <v-list class="px-4" variant="text" density="compact">
+            <v-list class="px-2" variant="text" density="compact">
               <v-list-subheader class="font-weight-black text-body-2" >目次</v-list-subheader>
               <v-divider thickness="1"></v-divider>
               <NuxtLink v-for="(item, index) in toc" :key="index" :to="`/articles/${article?.slug}/#${item.id || ''}`" class="text-decoration-none">
@@ -170,7 +191,7 @@ useHead({
           </v-container>
         </v-col>
       </v-row>
-      <div class="py-8"></div> <!-- 空白調整 -->
+      <div class="py-8 hidden-xs"></div> <!-- 空白調整 -->
     </v-container>
   </v-main>
 </template>
@@ -181,9 +202,7 @@ useHead({
 }
 
 .toc :hover {
-  border-width: 2px !important;
-  border-style: solid !important;
-  border-color: #BCAAA4 !important;
+  background-color: #ECEFF1; /* hover時の背景色 */
 }
 
 /* マークダウンで生成された本文の行間を調整 */

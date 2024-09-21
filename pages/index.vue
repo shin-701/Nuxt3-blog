@@ -21,8 +21,6 @@
     カバー画像： coverImage
     著者： author
     タグ： tags
-    firstPublishedAt
-    git commit -m "【ブログデザイン作成】vutifyインストール[in progress]"
 ========================================== -->
 
 <script lang="ts" setup>
@@ -49,7 +47,7 @@ const { data } = await useAsyncData('articles', async () => {
 
 // 全投稿データ
 const articles = data.value?.items;
-// 直近の3投稿
+// 直近の4投稿
 const resentlyArticles = data.value?.items.slice(0,4);
 // おすすめの投稿データ
 const recommendArticles = computed(() => {
@@ -60,7 +58,7 @@ const recommendArticles = computed(() => {
 //  ◆呼び出し関数
 // ===========================
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString()
+  return new Date(dateString).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
 };
 
 const htmlToString = (html: string) => {
@@ -114,8 +112,8 @@ useHead({
                 <div class="d-flex flex-row justify-space-between">
                   <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
                   <div class="d-flex flex-row">
-                    <v-icon icon="mdi-twitter pr-3"></v-icon>
-                    <div>仲山</div>
+                    <v-icon icon="mdi-account-edit pr-3"></v-icon>
+                    <div>{{ article.author.fullName }}</div>
                   </div>
                 </div>
               </v-card-item>
@@ -165,7 +163,7 @@ useHead({
     </v-container>
 
     <div class="py-8"></div> <!-- 空白調整 -->
-    <!-- ===ピックアップ記事================================ -->
+    <!-- ===ブログ説明================================ -->
     <v-container class="pa-0 bg-blue-grey-lighten-4" style="max-width: none;">
       <v-container class="d-flex flex-column justify-center align-center py-16">
         <v-row class="ma-0 d-flex">
