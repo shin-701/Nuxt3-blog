@@ -151,8 +151,8 @@ useHead({
                 <div class="d-flex flex-row justify-space-between">
                   <time :datetime="article._sys.raw.firstPublishedAt">{{ formatDate(article._sys.raw.firstPublishedAt) }}</time>
                   <div class="d-flex flex-row">
-                    <v-icon icon="mdi-twitter pr-3"></v-icon>
-                    <div>仲山</div>
+                    <v-icon icon="mdi-account-edit pr-3"></v-icon>
+                    <div>{{ article.author.fullName }}</div>
                   </div>
                 </div>
               </v-card-item>

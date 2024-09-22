@@ -23,8 +23,8 @@ const tags = tagData.value?.items;
 
 <template>
   <v-app>
-    <v-app-bar :elevation="0" class="bg-grey-darken-3">
     <!-- ===ヘッダー================================ -->
+    <v-app-bar :elevation="0" class="bg-grey-darken-3">
       <v-app-bar-title>
         <NuxtLink to="/" class="text-decoration-none font-weight-black text-white">Tonari no Nakayama ブログ</NuxtLink>
       </v-app-bar-title>

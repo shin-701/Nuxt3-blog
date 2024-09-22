@@ -34,32 +34,13 @@ const { data } = await useAsyncData(`article-${slug}`, async () => {
     appUid: 'blog',
     modelUid: 'article',
     query: {
-      slug: slug
+      slug: slug,
+      depth: 2
     }
   })
 })
 const article = data.value
 
-// ===========================
-//  ◆Newtから著者データ取得
-//   現状のAPIの使用では親モデル(記事)から子モデル(著者)の情報は取得できない為、再度APIを実行して情報を取得する.
-// ===========================
-const authorId = typeof article?.author.profileImage === 'string' 
-  ? article.author.profileImage 
-  : article?.author.profileImage?._id; // Media型の場合、適切なプロパティを使用
-
-const { data: authorData } = await useAsyncData(async () => {
-  const { $newtClient } = useNuxtApp()
-  return await $newtClient.getFirstContent<Author>({
-    appUid: 'blog',
-    modelUid: 'author',
-    query: {
-      authorId: authorId
-    }
-  })
-});
-
-const author = authorData.value
 // ===========================
 //  ◆v-htmlにcss適用
 // ===========================
@@ -166,7 +147,7 @@ useHead({
                   <div class="d-flex gc-1 align-center">
                     <div>{{ article?.author.fullName }}</div> 
                     <v-avatar>
-                      <v-img v-bind:src= author?.profileImage?.src></v-img>
+                      <v-img v-bind:src= article?.author.profileImage?.src></v-img>
                     </v-avatar>
                   </div>
                 </v-chip>
@@ -183,7 +164,7 @@ useHead({
             <v-list class="px-2" variant="text" density="compact">
               <v-list-subheader class="font-weight-black text-body-2" >目次</v-list-subheader>
               <v-divider thickness="1"></v-divider>
-              <NuxtLink v-for="(item, index) in toc" :key="index" :to="`/articles/${article?.slug}/#${item.id || ''}`" class="text-decoration-none">
+              <NuxtLink v-for="(item, index) in toc" :key="index" :to="`#${item.id || ''}`" class="text-decoration-none">
                 <v-list-item class="py-0 mt-1 text-black rounded-xl text-subtitle-2 font-weight-black toc" hover
                   style="min-height: 15px;" :style="{ paddingLeft: getPadding(item.tagName) }">{{ item.text }}</v-list-item>
               </NuxtLink>
@@ -200,7 +181,6 @@ useHead({
 .v-container {
   max-width: 1280px;
 }
-
 .toc :hover {
   background-color: #ECEFF1; /* hover時の背景色 */
 }
@@ -237,5 +217,4 @@ useHead({
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
-
 </style>
