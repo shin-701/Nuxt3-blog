@@ -39,7 +39,7 @@ const route = useRoute();
 const searchWords = Array.isArray(route.query.searchWords) ? route.query.searchWords.join(' ') : route.query.searchWords || '';
 
 // 投稿(article)取得
-const { data } = await useAsyncData('articles', async () => {
+const { data } = await useAsyncData(async () => {
   const { $newtClient } = useNuxtApp()
   // 検索ワードの指定がある場合は、抽出条件を指定してAPIを実行する
   if (searchWords) {
@@ -77,7 +77,7 @@ const { data } = await useAsyncData('articles', async () => {
 })
 
 // タグ(tags)取得
-const { data: tagData } = await useAsyncData('tags', async () => {
+const { data: tagData } = await useAsyncData(async () => {
   const { $newtClient } = useNuxtApp()
   return await $newtClient.getContents<Tag>({
     appUid: 'blog',

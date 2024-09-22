@@ -5,7 +5,7 @@ import type { Tag } from '~/types/tag'
 //  ◆Newtからデータ取得処理
 // ===========================
 // タグ(tags)取得
-const { data: tagData } = await useAsyncData('tags', async () => {
+const { data: tagData } = await useAsyncData(async () => {
   const { $newtClient } = useNuxtApp()
   return await $newtClient.getContents<Tag>({
     appUid: 'blog',

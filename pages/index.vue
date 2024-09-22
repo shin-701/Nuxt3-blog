@@ -33,7 +33,7 @@ import type { Article } from '~/types/article'
 //  ◆Newtからデータ取得処理
 // ===========================
 // 投稿(article)取得
-const { data } = await useAsyncData('articles', async () => {
+const { data } = await useAsyncData(async () => {
   const { $newtClient } = useNuxtApp()
   return await $newtClient.getContents<Article>({
     appUid: 'blog',
@@ -96,11 +96,11 @@ useHead({
           <NuxtLink :to="`/articles/${article.slug}`" class="text-decoration-none">
             <v-card class="mx-0 pa-2 d-flex flex-column bg-white rounded-xl" hover>
               <v-card-title class="font-weight-black"
-                style="display: -webkit-box; -webkit-box-orient: vertical; line-clamp: 3; white-space: normal;">
+                style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; white-space: normal;">
                 {{ article.title }}
               </v-card-title>
               <v-card-text class="mx-4 pa-0 h-auto"
-                style="display: -webkit-box; -webkit-box-orient: vertical; line-clamp: 3; white-space: normal; overflow: hidden;">
+                style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; white-space: normal; overflow: hidden;">
                 {{ htmlToString(article.body) }}
               </v-card-text>
               <v-card-item class="pb-0">

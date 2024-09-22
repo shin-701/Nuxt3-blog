@@ -16,7 +16,6 @@ import { ref, onMounted, watchEffect } from 'vue'
 
 import type { TocItem } from '~/types/tocItem'
 import type { Article } from '~/types/article'
-import type { Author } from '~/types/author'
 
 import hljs from 'highlight.js'
 import 'highlight.js/styles/rainbow.css' // 好みのテーマをインポート
@@ -28,7 +27,7 @@ const route = useRoute()
 // ===========================
 const { slug } = route.params
 
-const { data } = await useAsyncData(`article-${slug}`, async () => {
+const { data } = await useAsyncData(async () => {
   const { $newtClient } = useNuxtApp()
   return await $newtClient.getFirstContent<Article>({
     appUid: 'blog',
