@@ -81,8 +81,11 @@ const tags = tagData.value?.items;
   </v-app>
 </template>
 
-<style scoped>
+<style>
 .v-container {
   max-width: 1280px;
+}
+html {
+  scroll-padding-top: 80px;
 }
 </style>

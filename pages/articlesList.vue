@@ -189,9 +189,3 @@ useHead({
   </v-main>
 
 </template>
-
-<style scoped>
-.v-container {
-  max-width: 1280px;
-}
-</style>
